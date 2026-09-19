@@ -1,4 +1,5 @@
 """Gate: command strings per channel, non-blocking pulse timing, coalescing, dry_run, selftest."""
+import threading
 import time
 
 import pytest
@@ -122,6 +123,93 @@ def test_flush_cancels_a_scheduled_pulse(env):
     assert [e["action"] for e in g.log] == ["flush"] and fake.sent == ["S 90 90 75"]
 
 
+def test_flush_cannot_be_followed_by_a_stale_worker_open():
+    class BlockingLink:
+        def __init__(self):
+            self.open_started = threading.Event()
+            self.release_open = threading.Event()
+            self.completed = []
+
+        def cmd(self, line):
+            if line == "S 65 90 75":
+                self.open_started.set()
+                assert self.release_open.wait(1.0)
+            self.completed.append(line)
+            return "ok"
+
+    cfg = LineConfig()
+    link = BlockingLink()
+    g = Gate(link, cfg)
+    g.pulse(0.0, 10.0)
+    assert link.open_started.wait(1.0)
+    flush_done = threading.Event()
+    flush_thread = threading.Thread(target=lambda: (g.flush(), flush_done.set()))
+    flush_thread.start()
+    assert not flush_done.wait(0.05), "flush must wait behind the selected OPEN command"
+    link.release_open.set()
+    assert flush_done.wait(1.0)
+    flush_thread.join()
+    assert link.completed == ["S 65 90 75", "S 90 90 75"]
+    assert g.state == "flush"
+    g.close()
+
+
+def test_pulse_does_not_wait_for_an_inflight_serial_command():
+    class BlockingLink:
+        def __init__(self):
+            self.open_started = threading.Event()
+            self.release_open = threading.Event()
+
+        def cmd(self, line):
+            if line == "S 65 90 75":
+                self.open_started.set()
+                assert self.release_open.wait(1.0)
+            return "ok"
+
+    link = BlockingLink()
+    g = Gate(link, LineConfig())
+    open_thread = threading.Thread(target=g.open)
+    open_thread.start()
+    assert link.open_started.wait(1.0)
+    t0 = time.monotonic()
+    g.pulse(0.1, 0.1)
+    assert time.monotonic() - t0 < 0.02
+    link.release_open.set()
+    open_thread.join(1.0)
+    g.flush()
+    g.close()
+
+
+def test_pulses_during_inflight_flush_coalesce_into_a_new_schedule():
+    class BlockingFlushLink:
+        def __init__(self):
+            self.flush_started = threading.Event()
+            self.release_flush = threading.Event()
+
+        def cmd(self, line):
+            if line == "S 90 90 75":
+                self.flush_started.set()
+                assert self.release_flush.wait(1.0)
+            return "ok"
+
+    link = BlockingFlushLink()
+    g = Gate(link, LineConfig())
+    g.open()
+    g.pulse(0.0, 0.02)
+    assert link.flush_started.wait(1.0)
+    g.pulse(0.30, 0.10)
+    g.pulse(0.10, 0.50)
+    link.release_flush.set()
+    t0 = time.monotonic()
+    while g.status()["inflight_action"] is not None and time.monotonic() - t0 < 1.0:
+        time.sleep(0.005)
+    status = g.status()
+    assert status["state"] == "scheduled" and 0 < status["open_in_s"] <= 0.10
+    assert 0.45 <= status["flush_in_s"] <= 0.60 and status["n_coalesced"] == 2
+    g.flush()
+    g.close()
+
+
 def test_dry_run_records_but_sends_nothing(env):
     cfg, fake, make = env
     g = make(dry_run=True)
@@ -151,7 +239,82 @@ def test_link_error_is_logged_not_raised(env):
     g = make()
     fake.close()  # every cmd now raises LinkError
     g.open()
+    assert g.state == "error"
     assert g.n_errors == 1 and g.log[-1]["reply"].startswith("ERROR") and "closed" in g.last_error
+
+
+def test_non_ok_reply_is_an_error_not_a_success():
+    class RefusingLink:
+        def cmd(self, _line):
+            return "err"
+
+    g = Gate(RefusingLink(), LineConfig())
+    g.open()
+    assert g.state == "error" and g.n_errors == 1
+    assert g.log[-1]["reply"] == "err" and "refused" in g.last_error
+    g.close()
+
+
+@pytest.mark.parametrize("delay,dwell", [(-0.1, 0.1), (float("nan"), 0.1), (float("inf"), 0.1), (0.1, -0.1), (0.1, float("nan")), (0.1, float("inf"))])
+def test_pulse_rejects_negative_and_nonfinite_timing(env, delay, dwell):
+    _, fake, make = env
+    g = make()
+    with pytest.raises(ValueError):
+        g.pulse(delay, dwell)
+    assert g.state == "flush" and fake.sent == [] and g.n_pulses == 0
+
+
+def test_close_flushes_attempted_open_and_rejects_later_commands():
+    class LostOpenReplyLink:
+        def __init__(self):
+            self.sent = []
+
+        def cmd(self, line):
+            self.sent.append(line)
+            if line == "S 65 90 75":
+                raise LinkError("open acknowledgement lost")
+            return "ok"
+
+    link = LostOpenReplyLink()
+    g = Gate(link, LineConfig())
+    g.open()
+    assert g.state == "error"
+    g.close()
+    assert link.sent == ["S 65 90 75", "S 90 90 75"] and g.state == "flush"
+    with pytest.raises(RuntimeError, match="closed"):
+        g.pulse(0.0, 0.1)
+
+
+def test_lost_open_ack_keeps_the_scheduled_compensating_flush():
+    class LostOpenReplyLink:
+        def __init__(self):
+            self.sent = []
+
+        def cmd(self, line):
+            self.sent.append(line)
+            if line == "S 65 90 75":
+                raise LinkError("open acknowledgement lost")
+            return "ok"
+
+    link = LostOpenReplyLink()
+    g = Gate(link, LineConfig())
+    g.pulse(0.0, 0.15)
+    assert wait_state(g, "error")
+    with pytest.raises(RuntimeError, match="waiting.*flush"):
+        g.pulse(0.0, 0.1)
+    assert wait_state(g, "flush")
+    assert link.sent == ["S 65 90 75", "S 90 90 75"]
+    assert g.n_errors == 1 and "acknowledgement lost" in g.last_error
+    g.close()
+
+
+def test_close_cancels_a_pending_pulse_before_it_opens(env):
+    _, fake, make = env
+    g = make()
+    g.pulse(0.2, 0.2)
+    g.close()
+    time.sleep(0.3)
+    assert fake.sent == [] and g.state == "flush"
 
 
 def test_selftest_uses_a_fake_and_never_moves_the_real_link(env):

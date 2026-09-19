@@ -11,7 +11,7 @@ Open the HTML files in a browser (they are self-contained; the simulation loads 
 | `cutting_plan.html` | cut list, sheet layout (50 × 100, 2.5 mm cartón pluma), side-panel template with coordinates, base layout, servo bracket section, assembly order, tilt blocks |
 | `design_sheet.html` | side and plan views, door detail, timing budget, camera placement, software loop, mechanism comparison |
 | `simulation_threejs.html` | interactive 3D simulation: beans, door, phone view, six rejection mechanisms ranked by reliability, slope selector, manual door mode, failure injection |
-| `servo_wiring_demo.html` | first bench test: one SG90 on D9 / 5V / GND |
+| `servo_wiring_demo.html` | bounded bench test: D9 signal, external regulated power and shared GND; identify the actual servo type first |
 
 Live numbers for the software live in `sim/line/BUILD_ASBUILT.md` (mirrored from `~/robotics/line/`).
 

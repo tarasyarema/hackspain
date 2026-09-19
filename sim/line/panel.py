@@ -96,6 +96,7 @@ class Panel:
         self.checks: list[dict] = []
         self.checks_t = 0.0
         self.belt = 0
+        self._action_lock = threading.Lock()
         self.line.start()
         log("panel up: " + ", ".join(f"{k}={v}" for k, v in self.info.items()))
 
@@ -144,40 +145,45 @@ class Panel:
         return self.cmd(f"C {speed}")
 
     def gate(self, action: str, delay: float = 0.0, dwell: float | None = None) -> dict:
-        g = self.modules["gate"]
-        if action == "flush":
-            g.flush()
-        elif action == "open":
-            g.open()
-        elif action == "pulse":
-            g.pulse(float(delay), float(dwell if dwell is not None else self.cfg.gate.default_dwell_s))
-        else:
-            raise ValueError("gate action must be flush, open or pulse")
-        log(f"gate {action} (dry_run={getattr(g, 'dry_run', '?')})")
-        return g.status()
+        with self._action_lock:
+            g = self.modules["gate"]
+            if action == "flush":
+                g.flush()
+            elif action == "open":
+                g.open()
+            elif action == "pulse":
+                g.pulse(float(delay), float(dwell if dwell is not None else self.cfg.gate.default_dwell_s))
+            else:
+                raise ValueError("gate action must be flush, open or pulse")
+            log(f"gate {action} (dry_run={getattr(g, 'dry_run', '?')})")
+            return g.status()
 
     def line_action(self, action: str, confirm: str = "") -> dict:
-        g = self.modules["gate"]
-        if action == "start":
-            self.line.enabled = True
-        elif action == "stop":
-            self.line.enabled = False
-        elif action == "reset":
-            self.line.reset()
-        elif action == "dry":
-            g.dry_run = True
-            self.cfg.dry_run = True
-            save(self.cfg)
-        elif action == "live":
-            if confirm != "LIVE":
-                raise ValueError("switching the gate live needs confirm='LIVE'")
-            g.dry_run = False
-            self.cfg.dry_run = False
-            save(self.cfg)
-        else:
-            raise ValueError("unknown line action")
-        log(f"line {action}: enabled={self.line.enabled} dry_run={getattr(g, 'dry_run', '?')}")
-        return self.line.status()
+        with self._action_lock:
+            g = self.modules["gate"]
+            if action == "start":
+                self.line.set_enabled(True)
+            elif action == "stop":
+                self.line.set_enabled(False, flush=True)
+            elif action == "reset":
+                self.line.reset()
+            elif action == "dry":
+                self.line.set_enabled(False, flush=True)
+                if getattr(g, "state", "error") != "flush":
+                    raise RuntimeError("cannot enable dry run: live gate flush was not acknowledged")
+                g.dry_run = True
+                self.cfg.dry_run = True
+                save(self.cfg)
+            elif action == "live":
+                if confirm != "LIVE":
+                    raise ValueError("switching the gate live needs confirm='LIVE'")
+                g.dry_run = False
+                self.cfg.dry_run = False
+                save(self.cfg)
+            else:
+                raise ValueError("unknown line action")
+            log(f"line {action}: enabled={self.line.enabled} dry_run={getattr(g, 'dry_run', '?')}")
+            return self.line.status()
 
     def run_selftests(self, only: str | None = None) -> list[dict]:
         res = selftest.run(self.modules, only)
@@ -192,7 +198,10 @@ class Panel:
 
     def close(self) -> None:
         self.line.stop()
-        for k, m in self.modules.items():
+        # Gate.close may need the Arduino link for its final flush.
+        order = ["gate", "arduino"] + [k for k in self.modules if k not in ("gate", "arduino")]
+        for k in order:
+            m = self.modules[k]
             try:
                 m.close()
             except Exception as exc:  # noqa: BLE001
