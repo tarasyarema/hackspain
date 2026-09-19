@@ -5,7 +5,7 @@
     pulse(delay_s, dwell_s) NON-blocking: open at now+delay_s, flush at now+delay_s+dwell_s, on a worker thread.
                             Overlapping pulses coalesce: the open time is the earliest requested, the flush time
                             the latest, so a second suspect while the door is open just extends the dwell.
-    state                   'flush' | 'scheduled' | 'open'
+    state                   'flush' | 'scheduled' | 'open' | 'error' (command refused or link failed)
 
 `cfg.gate.channel` says which slot of `S b s e` is the door (base = D9); the other two slots carry
 `cfg.gate.hold_deg`. With `cfg.gate.ramp_override` the gate sends `R <ch> <door_vmax_deg_s> <door_accel_deg_s2>` once at
@@ -16,6 +16,7 @@ a pulse against a FakeArduino with the same config and checks the open/flush tim
 
 from __future__ import annotations
 
+import math
 import threading
 from collections import deque
 
@@ -42,7 +43,16 @@ class Gate:
         self._open_at: float | None = None
         self._flush_at: float | None = None
         self._cv = threading.Condition()
+        # Linearises state selection with the corresponding serial command.  The
+        # condition remains separate so the timer can sleep without owning it.
+        self._command_lock = threading.Lock()
         self._stop = False
+        self._closed = False
+        self._inflight_action: str | None = None
+        # True after any live OPEN attempt until a live FLUSH is acknowledged.
+        # A lost OPEN acknowledgement leaves the physical position unknown, so
+        # shutdown must still attempt FLUSH.
+        self._needs_flush = False
         self._worker = threading.Thread(target=self._run, name="gate-timer", daemon=True)
         self._worker.start()
         if getattr(self.cfg.gate, "ramp_override", False):
@@ -54,19 +64,21 @@ class Gate:
 
     def apply_ramp(self) -> None:
         """Send the door channel's ramp override (`R`). Logged as action 'ramp'; respects dry_run."""
-        line = self.ramp_command()
-        entry = {"t": self.clock(), "action": "ramp", "line": line, "sent": not self.dry_run, "reply": ""}
-        if not self.dry_run:
-            try:
-                entry["reply"] = self.link.cmd(line)
-                if entry["reply"] != "ok":  # older firmware answers `err`: keep going with the slow ramp
+        with self._command_lock:
+            self._require_open()
+            line = self.ramp_command()
+            entry = {"t": self.clock(), "action": "ramp", "line": line, "sent": not self.dry_run, "reply": ""}
+            if not self.dry_run:
+                try:
+                    entry["reply"] = self.link.cmd(line)
+                    if entry["reply"] != "ok":  # older firmware answers `err`: keep going with the slow ramp
+                        self.n_errors += 1
+                        self.last_error = f"ramp override refused ({entry['reply']}); firmware without R? door stays on the slow ramp"
+                except LinkError as e:
                     self.n_errors += 1
-                    self.last_error = f"ramp override refused ({entry['reply']}); firmware without R? door stays on the slow ramp"
-            except LinkError as e:
-                self.n_errors += 1
-                self.last_error = str(e)
-                entry["reply"] = f"ERROR {e}"
-        self.log.append(entry)
+                    self.last_error = str(e)
+                    entry["reply"] = f"ERROR {e}"
+            self.log.append(entry)
 
     # --- command building
     def _slot(self) -> int:
@@ -83,42 +95,96 @@ class Gate:
             vals.append(int(door_deg) if i == self._slot() else int(hold.pop(0)))
         return "S " + " ".join(str(max(0, min(180, v))) for v in vals)
 
-    def _send(self, action: str, door_deg: int) -> None:
+    def _require_open(self) -> None:
+        if self._closed:
+            raise RuntimeError("gate is closed")
+
+    def _send(self, action: str, door_deg: int, *, force: bool = False) -> tuple[bool, bool]:
         line = self.command(door_deg)
-        entry = {"t": self.clock(), "action": action, "line": line, "sent": not self.dry_run, "reply": ""}
-        if not self.dry_run:
+        sent = force or not self.dry_run
+        entry = {"t": self.clock(), "action": action, "line": line, "sent": sent, "reply": ""}
+        ok = True
+        if sent:
+            if action == "open":
+                self._needs_flush = True
             try:
                 entry["reply"] = self.link.cmd(line)
             except LinkError as e:
                 self.n_errors += 1
                 self.last_error = str(e)
                 entry["reply"] = f"ERROR {e}"
+                ok = False
+            else:
+                if entry["reply"] != "ok":
+                    self.n_errors += 1
+                    self.last_error = f"{action} refused ({entry['reply']!r})"
+                    ok = False
+            if ok and action == "flush":
+                self._needs_flush = False
         self.log.append(entry)
+        return ok, sent
 
     # --- GateDriver
     def flush(self) -> None:
-        with self._cv:
-            self._open_at = self._flush_at = None
-            self.state = "flush"
-            self._cv.notify()
-        self._send("flush", self.cfg.gate.flush_deg)
+        with self._command_lock:
+            self._require_open()
+            with self._cv:
+                self._open_at = self._flush_at = None
+                self._inflight_action = "flush"
+                self._cv.notify()
+            ok, _ = self._send("flush", self.cfg.gate.flush_deg)
+            with self._cv:
+                self._inflight_action = None
+                if not ok:
+                    self.state = "error"
+                    self._open_at = None
+                elif self._open_at is None:
+                    self.state = "flush"
+                self._cv.notify()
 
     def open(self) -> None:
-        with self._cv:
-            self._open_at = self._flush_at = None
-            self.state = "open"
-            self._cv.notify()
-        self._send("open", self.cfg.gate.open_deg)
+        with self._command_lock:
+            self._require_open()
+            with self._cv:
+                self._open_at = self._flush_at = None
+                self._inflight_action = "open"
+                self._cv.notify()
+            ok, _ = self._send("open", self.cfg.gate.open_deg)
+            with self._cv:
+                self._inflight_action = None
+                self.state = "open" if ok else "error"
+                if not ok:
+                    self._open_at = None
+                self._cv.notify()
 
     def pulse(self, delay_s: float, dwell_s: float | None = None) -> None:
         if dwell_s is None:
             dwell_s = self.cfg.gate.default_dwell_s
+        delay_s, dwell_s = float(delay_s), float(dwell_s)
+        if not math.isfinite(delay_s) or delay_s < 0:
+            raise ValueError("delay_s must be finite and non-negative")
+        if not math.isfinite(dwell_s) or dwell_s < 0:
+            raise ValueError("dwell_s must be finite and non-negative")
         t = self.clock()
-        open_at = t + max(0.0, delay_s)
-        flush_at = open_at + max(0.0, dwell_s)
+        open_at = t + delay_s
+        flush_at = open_at + dwell_s
         with self._cv:
+            self._require_open()
+            if self.state == "error" and self._needs_flush:
+                raise RuntimeError("gate command failed; waiting for an explicit or scheduled flush")
             self.n_pulses += 1
-            if self.state == "scheduled" and self._open_at is not None and self._flush_at is not None:
+            if self._inflight_action == "open":
+                self.n_coalesced += 1
+                self._flush_at = flush_at if self._flush_at is None else max(self._flush_at, flush_at)
+            elif self._inflight_action == "flush":
+                if self._open_at is not None and self._flush_at is not None:
+                    self.n_coalesced += 1
+                    self._open_at = min(self._open_at, open_at)
+                    self._flush_at = max(self._flush_at, flush_at)
+                else:
+                    self._open_at, self._flush_at = open_at, flush_at
+                self.state = "scheduled"
+            elif self.state == "scheduled" and self._open_at is not None and self._flush_at is not None:
                 self.n_coalesced += 1
                 self._open_at = min(self._open_at, open_at)
                 self._flush_at = max(self._flush_at, flush_at)
@@ -131,11 +197,18 @@ class Gate:
             self._cv.notify()
 
     # --- worker: one thread, one deadline at a time
+    def _deadline_locked(self) -> float | None:
+        if self.state == "scheduled":
+            return self._open_at
+        if self.state == "open" or self.state == "error" and self._needs_flush:
+            return self._flush_at
+        return None
+
     def _run(self) -> None:
         while True:
             with self._cv:
                 while not self._stop:
-                    deadline = self._open_at if self.state == "scheduled" else self._flush_at if self.state == "open" else None
+                    deadline = self._deadline_locked()
                     if deadline is None:
                         self._cv.wait()
                         continue
@@ -143,16 +216,33 @@ class Gate:
                     if remaining > 0:
                         self._cv.wait(min(remaining, 0.05))  # re-check: an injected clock may not wake us
                         continue
-                    if self.state == "scheduled":
-                        self.state, self._open_at = "open", None
-                        action, deg = "open", self.cfg.gate.open_deg
-                    else:
-                        self.state, self._flush_at = "flush", None
-                        action, deg = "flush", self.cfg.gate.flush_deg
                     break
                 if self._stop:
                     return
-            self._send(action, deg)  # outside the lock: serial I/O must not block pulse()
+            with self._command_lock:
+                with self._cv:
+                    if self._stop:
+                        return
+                    deadline = self._deadline_locked()
+                    if deadline is None or deadline > self.clock():
+                        continue  # a manual command or a coalesced pulse changed the work
+                    if self.state == "scheduled":
+                        self._open_at = None
+                        action, deg = "open", self.cfg.gate.open_deg
+                    else:
+                        self._flush_at = None
+                        action, deg = "flush", self.cfg.gate.flush_deg
+                    self._inflight_action = action
+                ok, _ = self._send(action, deg)
+                with self._cv:
+                    self._inflight_action = None
+                    if ok:
+                        if action == "open" or self._open_at is None:
+                            self.state = action
+                    else:
+                        self.state = "error"
+                        self._open_at = None
+                    self._cv.notify()
 
     # --- Module
     def status(self) -> dict:
@@ -162,6 +252,7 @@ class Gate:
                     "flush_deg": self.cfg.gate.flush_deg, "open_deg": self.cfg.gate.open_deg,
                     "ramp_override": bool(getattr(self.cfg.gate, "ramp_override", False)),
                     "settle_ms": self.cfg.gate.settle_ms,
+                    "inflight_action": self._inflight_action,
                     "open_in_s": None if self._open_at is None else round(self._open_at - t, 3),
                     "flush_in_s": None if self._flush_at is None else round(self._flush_at - t, 3),
                     "n_pulses": self.n_pulses, "n_coalesced": self.n_coalesced, "n_errors": self.n_errors,
@@ -201,7 +292,19 @@ class Gate:
         return out
 
     def close(self) -> None:
-        with self._cv:
-            self._stop = True
-            self._cv.notify_all()
+        with self._command_lock:
+            with self._cv:
+                if self._closed:
+                    return
+                self._closed = True
+                self._stop = True
+                self._open_at = self._flush_at = None
+                needs_flush = self._needs_flush
+                if not needs_flush:
+                    self.state = "flush"
+                self._cv.notify_all()
+            if needs_flush:
+                ok, _ = self._send("flush", self.cfg.gate.flush_deg, force=True)
+                with self._cv:
+                    self.state = "flush" if ok else "error"
         self._worker.join(timeout=1.0)

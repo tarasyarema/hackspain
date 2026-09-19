@@ -1,13 +1,16 @@
 """Closed loop on synthetic frames: one bean → one verdict; a burnt bean → one dry-run gate pulse; never twice per bean."""
+import threading
 import time
 
 import cv2
 import numpy as np
+import pytest
 
-from line import _stubs, config
-from line.contracts import Frame, now
+from line import _stubs, config, panel as panel_module
+from line.contracts import Frame, Verdict, now
 from line.pipeline import SortingLine, flow_fraction, fallback_gate_schedule
 from line.contracts import Blob, ROI
+from line.gate import Gate
 
 
 def make(cfg, t, u=None, dark=False):
@@ -43,6 +46,7 @@ def roll(line, cfg, dark, dt=0.02):
 
 def test_good_bean_one_verdict_no_gate():
     cfg = config.LineConfig()
+    cfg.act_on = "suspect"
     line, gate = build(cfg)
     verdicts = roll(line, cfg, dark=False)
     assert len(verdicts) == 1 and not verdicts[0].suspect, [v.reason for v in verdicts]
@@ -79,6 +83,185 @@ def test_disabled_line_only_previews():
     assert roll(line, cfg, dark=True) == []
     assert line.counters["beans"] == 1 and line.counters["gate_pulses"] == 0
     assert line.latest_jpeg() is not None
+
+
+def test_disabling_during_classification_flushes_and_prevents_a_late_pulse():
+    class BlockingClassifier:
+        def __init__(self):
+            self.started = threading.Event()
+            self.release = threading.Event()
+
+        def classify(self, _frame, _blob):
+            self.started.set()
+            assert self.release.wait(1.0)
+            return Verdict("burnt", 1.0, True, "test", 0.0, "blocking")
+
+    class RecordingGate:
+        dry_run = False
+
+        def __init__(self):
+            self.actions = []
+
+        def pulse(self, _delay, _dwell):
+            self.actions.append("pulse")
+
+        def flush(self):
+            self.actions.append("flush")
+
+    cfg = config.LineConfig()
+    classifier = BlockingClassifier()
+    gate = RecordingGate()
+    line = SortingLine(cfg, None, None, classifier, gate, None)
+    line.set_enabled(True)
+    frame = Frame(np.zeros((10, 10, 3), np.uint8), now(), 1, "test")
+    blob = Blob(5, 5, (2, 2, 6, 6), 36, False)
+    decision = threading.Thread(target=line._decide, args=(frame, blob, ROI(0, 0, 10, 10)))
+    decision.start()
+    assert classifier.started.wait(1.0)
+    line.set_enabled(False, flush=True)
+    classifier.release.set()
+    decision.join(1.0)
+    assert not decision.is_alive()
+    assert gate.actions == ["flush"] and line.counters["gate_pulses"] == 0
+
+
+def test_panel_stop_and_dry_disable_then_flush(monkeypatch):
+    class Gate:
+        dry_run = False
+
+    class Line:
+        enabled = True
+
+        def __init__(self, gate):
+            self.gate = gate
+            self.calls = []
+
+        def set_enabled(self, enabled, *, flush=False):
+            self.calls.append((enabled, flush, self.gate.dry_run))
+            self.enabled = enabled
+
+        def status(self):
+            return {"enabled": self.enabled}
+
+    p = panel_module.Panel.__new__(panel_module.Panel)
+    p.cfg = config.LineConfig()
+    p.cfg.dry_run = False
+    gate = Gate()
+    gate.state = "flush"
+    p.modules = {"gate": gate}
+    p.line = Line(gate)
+    p._action_lock = threading.Lock()
+    monkeypatch.setattr(panel_module, "save", lambda _cfg: None)
+    p.line_action("stop")
+    p.line_action("start")
+    p.line_action("dry")
+    assert p.line.calls == [(False, True, False), (True, False, False), (False, True, False)]
+    assert gate.dry_run is True and p.cfg.dry_run is True
+
+
+def test_panel_rejects_dry_transition_when_live_flush_fails(monkeypatch):
+    class Gate:
+        dry_run = False
+        state = "open"
+
+        def flush(self):
+            self.state = "error"
+
+    class Line:
+        enabled = True
+
+        def __init__(self, gate):
+            self.gate = gate
+
+        def set_enabled(self, enabled, *, flush=False):
+            self.enabled = enabled
+            if flush:
+                self.gate.flush()
+
+    p = panel_module.Panel.__new__(panel_module.Panel)
+    p.cfg = config.LineConfig()
+    p.cfg.dry_run = False
+    gate = Gate()
+    p.modules = {"gate": gate}
+    p.line = Line(gate)
+    p._action_lock = threading.Lock()
+    monkeypatch.setattr(panel_module, "save", lambda _cfg: None)
+    with pytest.raises(RuntimeError, match="flush was not acknowledged"):
+        p.line_action("dry")
+    assert gate.dry_run is False and p.cfg.dry_run is False
+
+
+def test_panel_serializes_manual_open_with_dry_transition(monkeypatch):
+    class BlockingLink:
+        def __init__(self):
+            self.open_started = threading.Event()
+            self.release_open = threading.Event()
+            self.sent = []
+
+        def cmd(self, line):
+            self.sent.append(line)
+            if line == "S 65 90 75":
+                self.open_started.set()
+                assert self.release_open.wait(1.0)
+            return "ok"
+
+    class Line:
+        enabled = True
+
+        def __init__(self, gate):
+            self.gate = gate
+
+        def set_enabled(self, enabled, *, flush=False):
+            self.enabled = enabled
+            if flush:
+                self.gate.flush()
+
+        def status(self):
+            return {"enabled": self.enabled}
+
+    p = panel_module.Panel.__new__(panel_module.Panel)
+    p.cfg = config.LineConfig()
+    link = BlockingLink()
+    gate = Gate(link, p.cfg)
+    p.modules = {"gate": gate}
+    p.line = Line(gate)
+    p._action_lock = threading.Lock()
+    monkeypatch.setattr(panel_module, "save", lambda _cfg: None)
+    open_thread = threading.Thread(target=p.gate, args=("open",))
+    open_thread.start()
+    assert link.open_started.wait(1.0)
+    dry_done = threading.Event()
+    dry_thread = threading.Thread(target=lambda: (p.line_action("dry"), dry_done.set()))
+    dry_thread.start()
+    assert not dry_done.wait(0.05)
+    link.release_open.set()
+    open_thread.join(1.0)
+    assert dry_done.wait(1.0)
+    dry_thread.join(1.0)
+    assert link.sent == ["S 65 90 75", "S 90 90 75"]
+    assert gate.state == "flush" and gate.dry_run is True
+    gate.close()
+
+
+def test_panel_closes_gate_before_arduino_link():
+    order = []
+
+    class Closeable:
+        def __init__(self, name):
+            self.name = name
+
+        def close(self):
+            order.append(self.name)
+
+    class Line:
+        def stop(self):
+            order.append("line")
+
+    p = panel_module.Panel.__new__(panel_module.Panel)
+    p.line = Line()
+    p.modules = {"arduino": Closeable("arduino"), "gate": Closeable("gate"), "camera": Closeable("camera")}
+    p.close()
+    assert order == ["line", "gate", "arduino", "camera"]
 
 
 def test_flow_fraction_and_schedule():

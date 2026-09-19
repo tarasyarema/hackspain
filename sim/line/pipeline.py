@@ -83,6 +83,7 @@ class SortingLine:
         self.loop_ms = 0.0
         self._jpeg: bytes | None = None
         self._jpeg_lock = threading.Lock()
+        self._actuation_lock = threading.Lock()
         self._thread: threading.Thread | None = None
         self._stop = threading.Event()
 
@@ -164,11 +165,12 @@ class SortingLine:
             self.counters["suspect"] += 1
         else:
             self.counters["good"] += 1
-        if verdict.suspect or getattr(self.cfg, "act_on", "suspect") == "all":
-            delay, dwell = gate_schedule(frac, self.cfg)
-            self.gate.pulse(delay, dwell)
-            self.counters["gate_pulses"] += 1
-            self.event("gate_open", in_s=round(delay, 3), dwell_s=round(dwell, 2), dry_run=getattr(self.gate, "dry_run", True), because="every bean" if not verdict.suspect else "suspect")
+        with self._actuation_lock:
+            if self.enabled and (verdict.suspect or getattr(self.cfg, "act_on", "suspect") == "all"):
+                delay, dwell = gate_schedule(frac, self.cfg)
+                self.gate.pulse(delay, dwell)
+                self.counters["gate_pulses"] += 1
+                self.event("gate_open", in_s=round(delay, 3), dwell_s=round(dwell, 2), dry_run=getattr(self.gate, "dry_run", True), because="every bean" if not verdict.suspect else "suspect")
         return verdict
 
     # ------------------------------------------------------------ preview
@@ -258,6 +260,13 @@ class SortingLine:
         self._stop.set()
         if self._thread:
             self._thread.join(timeout=2)
+
+    def set_enabled(self, enabled: bool, *, flush: bool = False) -> None:
+        """Change live actuation state without racing a verdict that is about to schedule the gate."""
+        with self._actuation_lock:
+            self.enabled = bool(enabled)
+        if not enabled and flush:
+            self.gate.flush()
 
     def reset(self) -> None:
         for k in self.counters:
