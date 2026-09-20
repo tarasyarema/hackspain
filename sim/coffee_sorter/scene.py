@@ -87,6 +87,9 @@ def build_xml(profile: Profile, L: Layout = Layout(), seed: int = 0) -> str:
         for j in range(L.n_nozzles))
     br, bg, bb = profile.belt_rgb
     bz = L.belt_z
+    splitter_angle = 0.25
+    splitter_x = L.split_x + 0.14 + 0.004 * np.sin(splitter_angle)
+    splitter_z = L.split_z + 0.004 * np.cos(splitter_angle)
     xml = f"""<mujoco model="coffee_belt_sorter">
   <compiler angle="radian" texturedir="{ASSETS}" meshdir="{ASSETS}"/>
   <option timestep="{L.timestep}" integrator="implicitfast" solver="CG" iterations="12" tolerance="1e-6" cone="pyramidal"/>
@@ -157,7 +160,7 @@ def build_xml(profile: Profile, L: Layout = Layout(), seed: int = 0) -> str:
     {nozzles}
 
     <!-- splitter blade and chutes (accept above, reject below) -->
-    <geom name="splitter" type="box" size="0.14 {L.belt_w / 2 + 0.02:.4f} 0.002" pos="{L.split_x + 0.14:.3f} 0 {L.split_z:.4f}" euler="0 0.25 0" material="steel" class="static"/>
+    <geom name="splitter" type="box" size="0.14 {L.belt_w / 2 + 0.02:.4f} 0.006" pos="{splitter_x:.12f} 0 {splitter_z:.12f}" euler="0 {splitter_angle} 0" material="steel" class="static" priority="2" friction="0.10 0.01 0.0005" condim="3" solref="0.006 1" solimp="0.95 0.99 0.001"/>
     <geom type="box" size="0.16 0.002 0.16" pos="{L.split_x + 0.12:.3f} {L.belt_w / 2 + 0.022:.4f} {bz - 0.12:.3f}" material="chute" class="visual"/>
     <geom type="box" size="0.16 0.002 0.16" pos="{L.split_x + 0.12:.3f} {-L.belt_w / 2 - 0.022:.4f} {bz - 0.12:.3f}" material="chute" class="visual"/>
     <geom name="bin_accept" type="box" size="0.12 {L.belt_w / 2 + 0.02:.4f} 0.003" pos="{L.split_x + 0.30:.3f} 0 {L.split_z - 0.048:.3f}" rgba="0.2 0.6 0.25 1" class="static"/>
