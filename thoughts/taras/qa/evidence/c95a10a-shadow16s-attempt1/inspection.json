@@ -1,0 +1,1253 @@
+{
+  "raw_sha256": "230a2acd89f5bf53973c911cf9788e7b51c3dcfb6a5330988f690a116e22aac6",
+  "independent_checks": "passed",
+  "mature_rows": 4902,
+  "scores": {
+    "old": {
+      "sorting_accuracy": {
+        "numerator": 4692,
+        "denominator": 4902,
+        "percent": 95.71603427172583
+      },
+      "reject_capture": {
+        "numerator": 721,
+        "denominator": 807,
+        "percent": 89.34324659231723
+      },
+      "keep_loss": {
+        "numerator": 121,
+        "denominator": 4095,
+        "percent": 2.954822954822955
+      },
+      "spill": {
+        "numerator": 4,
+        "denominator": 4902,
+        "percent": 0.08159934720522236
+      },
+      "unresolved": {
+        "numerator": 5,
+        "denominator": 4902,
+        "percent": 0.10199918400652795
+      }
+    },
+    "native": {
+      "sorting_accuracy": {
+        "numerator": 3665,
+        "denominator": 4902,
+        "percent": 74.76540187678499
+      },
+      "reject_capture": {
+        "numerator": 378,
+        "denominator": 807,
+        "percent": 46.84014869888476
+      },
+      "keep_loss": {
+        "numerator": 528,
+        "denominator": 4095,
+        "percent": 12.893772893772894
+      },
+      "spill": {
+        "numerator": 606,
+        "denominator": 4902,
+        "percent": 12.362301101591187
+      },
+      "unresolved": {
+        "numerator": 316,
+        "denominator": 4902,
+        "percent": 6.446348429212566
+      }
+    }
+  },
+  "disagreement_count": 1155,
+  "disagreements": {
+    "accept -> unresolved": 280,
+    "accept -> spilled": 470,
+    "reject -> accept": 230,
+    "reject -> unresolved": 36,
+    "reject -> spilled": 132,
+    "accept -> reject": 2,
+    "unresolved -> reject": 5
+  },
+  "native_failure_modes": {
+    "accept required -> unresolved": 280,
+    "accept required -> reject": 73,
+    "accept required -> spilled": 455,
+    "reject required -> accept": 242,
+    "reject required -> unresolved": 36,
+    "reject required -> spilled": 151
+  },
+  "old_correct_native_incorrect": {
+    "accept -> unresolved": 270,
+    "accept -> spilled": 446,
+    "reject -> accept": 196,
+    "reject -> unresolved": 26,
+    "reject -> spilled": 123,
+    "accept -> reject": 2
+  },
+  "spill_position_regions": {
+    "beyond_furthest_end_wall_exterior": 470,
+    "near_floor_elsewhere": 136
+  },
+  "spill_position_note": "Rounded final positions identify regions, not the exact triggering contact or predicate.",
+  "overdue_count": 316,
+  "overdue_contact_sets": {
+    "bin_accept_end": 276,
+    "bin_reject_end": 36,
+    "bin_accept_end + unnamed:600": 1,
+    "splitter": 1,
+    "bin_accept_end + unnamed:304": 1,
+    "bin_accept_end + unnamed:292": 1
+  },
+  "overdue_by_class": {
+    "good": 280,
+    "insect": 6,
+    "broken": 14,
+    "stone": 1,
+    "faded": 7,
+    "sour": 7,
+    "black": 1
+  },
+  "overdue_by_shape": {
+    "ellipsoid": 301,
+    "half": 14,
+    "box": 1
+  },
+  "overdue_speed_below_1mm_s": 50,
+  "overdue_ages_over_5s": 248,
+  "oldest_10": [
+    {
+      "uid": 1,
+      "age_s": 15.996999999996572,
+      "pos": [
+        0.7598306203983798,
+        -0.03870500100478732,
+        0.32243310543823284
+      ],
+      "velocity": [
+        0.0918559117729664,
+        -0.00011841852727032135,
+        -0.0054343647940641145,
+        6.218963338490644e-06,
+        -0.8791798999015451,
+        -0.19402006058181373
+      ],
+      "contact_solve_position": [
+        0.7597387644866068,
+        -0.03870488258626005,
+        0.3224385398030269
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 822,
+          "normal_force_n": 0.01551298932743589,
+          "distance_m": -0.002765948622374795,
+          "normal_world_raw": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            822,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.5110000000000003,
+      "linear_speed_m_s": 0.09201660106364258
+    },
+    {
+      "uid": 39,
+      "age_s": 15.920999999996571,
+      "pos": [
+        0.7597226558857799,
+        0.03917726241487906,
+        0.32626983879211685
+      ],
+      "velocity": [
+        -0.03611878842737491,
+        1.4364540571249705e-05,
+        -0.003932429889149438,
+        -8.911906998911726e-06,
+        0.26469563799560736,
+        -0.029302393935449894
+      ],
+      "contact_solve_position": [
+        0.7597587746742073,
+        0.03917724805033849,
+        0.326273771222006
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 748,
+          "normal_force_n": 0.019626192085083788,
+          "distance_m": -0.002634727173694377,
+          "normal_world_raw": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            748,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.5970000000000004,
+      "linear_speed_m_s": 0.036332232089902945
+    },
+    {
+      "uid": 44,
+      "age_s": 15.910999999996571,
+      "pos": [
+        0.5192779161127246,
+        -0.08372144601019584,
+        0.1921220464236512
+      ],
+      "velocity": [
+        -0.07186052336344248,
+        -3.317379655908407e-05,
+        -0.003684552079355912,
+        9.55906249077716e-05,
+        -0.05655732836753584,
+        -0.616059706986045
+      ],
+      "contact_solve_position": [
+        0.519349776636088,
+        -0.08372141283639928,
+        0.19212573097573055
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_reject_end",
+          "other_geom_id": 21,
+          "target_geom_id": 738,
+          "normal_force_n": 0.010417587292403817,
+          "distance_m": -0.002263457408361441,
+          "normal_world_raw": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            738,
+            21
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "insect",
+      "shape": "ellipsoid",
+      "old_label": "reject",
+      "old_retired_s": 0.6150000000000004,
+      "linear_speed_m_s": 0.07195492924459121
+    },
+    {
+      "uid": 45,
+      "age_s": 15.908999999996572,
+      "pos": [
+        0.7599112445557914,
+        -0.0127716933614698,
+        0.326173182819583
+      ],
+      "velocity": [
+        0.15385614251396565,
+        2.551913070110769e-05,
+        -0.00400246562612452,
+        1.7297038990225908e-05,
+        -1.0393359807236369,
+        0.19521991495587
+      ],
+      "contact_solve_position": [
+        0.7597573884132774,
+        -0.0127717188806005,
+        0.32617718528520917
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 736,
+          "normal_force_n": 0.014891738570829656,
+          "distance_m": -0.0032336895168513713,
+          "normal_world_raw": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            736,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.6220000000000004,
+      "linear_speed_m_s": 0.1539081965705272
+    },
+    {
+      "uid": 50,
+      "age_s": 15.89899999999657,
+      "pos": [
+        0.7596131387576927,
+        0.12238273378953701,
+        0.3140074360904145
+      ],
+      "velocity": [
+        -0.07010480242317453,
+        8.418308880420146e-05,
+        -0.004432104576130185,
+        -7.080922038896674e-05,
+        0.5778496905177907,
+        -0.24618024920602144
+      ],
+      "contact_solve_position": [
+        0.7596832435601159,
+        0.12238264960644821,
+        0.3140118681949906
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 726,
+          "normal_force_n": 0.012690873413865711,
+          "distance_m": -0.002444082032694585,
+          "normal_world_raw": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            726,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.5970000000000004,
+      "linear_speed_m_s": 0.07024481447451145
+    },
+    {
+      "uid": 59,
+      "age_s": 15.880999999996572,
+      "pos": [
+        0.7596464678269432,
+        0.007221667880702479,
+        0.3124749169777481
+      ],
+      "velocity": [
+        -0.08891314697170685,
+        6.600822124778944e-05,
+        -0.004391923098526151,
+        -5.015031678936314e-05,
+        0.8496505182848965,
+        -0.16551119143759674
+      ],
+      "contact_solve_position": [
+        0.7597353809739149,
+        0.007221601872481232,
+        0.31247930890084663
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 708,
+          "normal_force_n": 0.012438875615173397,
+          "distance_m": -0.002406155132210124,
+          "normal_world_raw": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            708,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.6160000000000004,
+      "linear_speed_m_s": 0.08902157631721078
+    },
+    {
+      "uid": 68,
+      "age_s": 15.862999999996571,
+      "pos": [
+        0.7597003282095014,
+        -0.18946208761598568,
+        0.32349755276227726
+      ],
+      "velocity": [
+        -0.04209143209006312,
+        -4.5018558582602497e-05,
+        -0.004655552639734165,
+        3.0315374765255016e-05,
+        0.4028706251795894,
+        0.0469097099135426
+      ],
+      "contact_solve_position": [
+        0.7597424196415915,
+        -0.1894620425974271,
+        0.323502208314917
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 690,
+          "normal_force_n": 0.016708461606933525,
+          "distance_m": -0.0023753440136216964,
+          "normal_world_raw": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            690,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.6540000000000005,
+      "linear_speed_m_s": 0.04234813871286846
+    },
+    {
+      "uid": 86,
+      "age_s": 15.826999999996572,
+      "pos": [
+        0.7598686928054674,
+        -0.013079849357154215,
+        0.33128136639515
+      ],
+      "velocity": [
+        -0.0007723146892329724,
+        7.227412387105975e-05,
+        -0.005800250880885321,
+        -6.49501769808354e-05,
+        0.23800221752819706,
+        -0.0595391594285333
+      ],
+      "contact_solve_position": [
+        0.7598694651201566,
+        -0.013079921631278087,
+        0.33128716664603086
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 654,
+          "normal_force_n": 0.020187497072922042,
+          "distance_m": -0.002446015280816395,
+          "normal_world_raw": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            654,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.6780000000000005,
+      "linear_speed_m_s": 0.005851888909522916
+    },
+    {
+      "uid": 136,
+      "age_s": 15.726999999996572,
+      "pos": [
+        0.7597657791128694,
+        -0.18420862314961667,
+        0.32858699541169106
+      ],
+      "velocity": [
+        0.11872499907279174,
+        -9.864694724665352e-05,
+        -0.004536751035011241,
+        -4.981773868185332e-06,
+        -0.739656557885564,
+        -0.6331195307923374
+      ],
+      "contact_solve_position": [
+        0.7596470541137965,
+        -0.18420852450266942,
+        0.3285915321627261
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 554,
+          "normal_force_n": 0.01611283407780963,
+          "distance_m": -0.003251159070612159,
+          "normal_world_raw": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            554,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.7750000000000006,
+      "linear_speed_m_s": 0.11881168817085412
+    },
+    {
+      "uid": 146,
+      "age_s": 15.70699999999657,
+      "pos": [
+        0.7600292061247178,
+        -0.12485796260896972,
+        0.32102833901687794
+      ],
+      "velocity": [
+        -0.015022492123905967,
+        0.0001368635296792353,
+        -0.006059913155170717,
+        -2.0267451656020094e-05,
+        0.09835336088416691,
+        -0.03474261127072342
+      ],
+      "contact_solve_position": [
+        0.7600442286168417,
+        -0.1248580994724994,
+        0.3210343989300331
+      ],
+      "contacts": [
+        {
+          "other_geom": "bin_accept_end",
+          "other_geom_id": 20,
+          "target_geom_id": 534,
+          "normal_force_n": 0.015620225104950265,
+          "distance_m": -0.0022881689839529644,
+          "normal_world_raw": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "geom_ids": [
+            534,
+            20
+          ],
+          "solve_time_s": 15.998999999996572
+        }
+      ],
+      "class": "good",
+      "shape": "ellipsoid",
+      "old_label": "accept",
+      "old_retired_s": 0.8150000000000006,
+      "linear_speed_m_s": 0.016199276177866224
+    }
+  ],
+  "samples": [
+    {
+      "time_s": 0.5000000000000003,
+      "spawned": 250,
+      "starved": 0,
+      "active": 250,
+      "active_by_shape": {
+        "ellipsoid": 246,
+        "half": 3,
+        "box": 0,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 154,
+        "half": 45,
+        "box": 20,
+        "capsule": 19
+      },
+      "old_retired_still_active": 0,
+      "overdue_active": 0,
+      "oldest_active_age": 0.49900000000000033
+    },
+    {
+      "time_s": 1.0000000000000007,
+      "spawned": 500,
+      "starved": 0,
+      "active": 372,
+      "active_by_shape": {
+        "ellipsoid": 367,
+        "half": 5,
+        "box": 0,
+        "capsule": 0
+      },
+      "free_by_shape": {
+        "ellipsoid": 33,
+        "half": 43,
+        "box": 20,
+        "capsule": 20
+      },
+      "old_retired_still_active": 117,
+      "overdue_active": 0,
+      "oldest_active_age": 0.9970000000000007
+    },
+    {
+      "time_s": 1.4999999999999456,
+      "spawned": 750,
+      "starved": 0,
+      "active": 389,
+      "active_by_shape": {
+        "ellipsoid": 377,
+        "half": 7,
+        "box": 1,
+        "capsule": 4
+      },
+      "free_by_shape": {
+        "ellipsoid": 23,
+        "half": 41,
+        "box": 19,
+        "capsule": 16
+      },
+      "old_retired_still_active": 134,
+      "overdue_active": 16,
+      "oldest_active_age": 1.4969999999999457
+    },
+    {
+      "time_s": 1.9999999999998905,
+      "spawned": 996,
+      "starved": 4,
+      "active": 405,
+      "active_by_shape": {
+        "ellipsoid": 393,
+        "half": 6,
+        "box": 3,
+        "capsule": 3
+      },
+      "free_by_shape": {
+        "ellipsoid": 7,
+        "half": 42,
+        "box": 17,
+        "capsule": 17
+      },
+      "old_retired_still_active": 157,
+      "overdue_active": 40,
+      "oldest_active_age": 1.9969999999998906
+    },
+    {
+      "time_s": 2.4999999999998357,
+      "spawned": 1226,
+      "starved": 24,
+      "active": 409,
+      "active_by_shape": {
+        "ellipsoid": 398,
+        "half": 6,
+        "box": 3,
+        "capsule": 2
+      },
+      "free_by_shape": {
+        "ellipsoid": 2,
+        "half": 42,
+        "box": 17,
+        "capsule": 18
+      },
+      "old_retired_still_active": 177,
+      "overdue_active": 58,
+      "oldest_active_age": 2.4969999999998356
+    },
+    {
+      "time_s": 2.9999999999997806,
+      "spawned": 1446,
+      "starved": 54,
+      "active": 407,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 5,
+        "box": 2,
+        "capsule": 0
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 43,
+        "box": 18,
+        "capsule": 20
+      },
+      "old_retired_still_active": 180,
+      "overdue_active": 75,
+      "oldest_active_age": 2.9969999999997805
+    },
+    {
+      "time_s": 3.4999999999997256,
+      "spawned": 1659,
+      "starved": 91,
+      "active": 407,
+      "active_by_shape": {
+        "ellipsoid": 396,
+        "half": 9,
+        "box": 1,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 4,
+        "half": 39,
+        "box": 19,
+        "capsule": 19
+      },
+      "old_retired_still_active": 189,
+      "overdue_active": 97,
+      "oldest_active_age": 3.4969999999997254
+    },
+    {
+      "time_s": 3.9999999999996705,
+      "spawned": 1865,
+      "starved": 135,
+      "active": 405,
+      "active_by_shape": {
+        "ellipsoid": 396,
+        "half": 6,
+        "box": 2,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 4,
+        "half": 42,
+        "box": 18,
+        "capsule": 19
+      },
+      "old_retired_still_active": 194,
+      "overdue_active": 103,
+      "oldest_active_age": 3.9969999999996704
+    },
+    {
+      "time_s": 4.4999999999998375,
+      "spawned": 2075,
+      "starved": 175,
+      "active": 410,
+      "active_by_shape": {
+        "ellipsoid": 397,
+        "half": 10,
+        "box": 3,
+        "capsule": 0
+      },
+      "free_by_shape": {
+        "ellipsoid": 3,
+        "half": 38,
+        "box": 17,
+        "capsule": 20
+      },
+      "old_retired_still_active": 198,
+      "overdue_active": 109,
+      "oldest_active_age": 4.496999999999837
+    },
+    {
+      "time_s": 5.000000000000004,
+      "spawned": 2268,
+      "starved": 232,
+      "active": 409,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 7,
+        "box": 1,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 41,
+        "box": 19,
+        "capsule": 19
+      },
+      "old_retired_still_active": 210,
+      "overdue_active": 117,
+      "oldest_active_age": 4.997000000000004
+    },
+    {
+      "time_s": 5.500000000000171,
+      "spawned": 2455,
+      "starved": 295,
+      "active": 410,
+      "active_by_shape": {
+        "ellipsoid": 399,
+        "half": 9,
+        "box": 1,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 1,
+        "half": 39,
+        "box": 19,
+        "capsule": 19
+      },
+      "old_retired_still_active": 219,
+      "overdue_active": 129,
+      "oldest_active_age": 5.497000000000171
+    },
+    {
+      "time_s": 6.000000000000338,
+      "spawned": 2650,
+      "starved": 350,
+      "active": 411,
+      "active_by_shape": {
+        "ellipsoid": 397,
+        "half": 8,
+        "box": 3,
+        "capsule": 3
+      },
+      "free_by_shape": {
+        "ellipsoid": 3,
+        "half": 40,
+        "box": 17,
+        "capsule": 17
+      },
+      "old_retired_still_active": 216,
+      "overdue_active": 140,
+      "oldest_active_age": 5.997000000000338
+    },
+    {
+      "time_s": 6.500000000000505,
+      "spawned": 2817,
+      "starved": 433,
+      "active": 410,
+      "active_by_shape": {
+        "ellipsoid": 394,
+        "half": 12,
+        "box": 3,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 6,
+        "half": 36,
+        "box": 17,
+        "capsule": 19
+      },
+      "old_retired_still_active": 240,
+      "overdue_active": 149,
+      "oldest_active_age": 6.497000000000505
+    },
+    {
+      "time_s": 7.000000000000672,
+      "spawned": 2994,
+      "starved": 506,
+      "active": 413,
+      "active_by_shape": {
+        "ellipsoid": 399,
+        "half": 12,
+        "box": 1,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 1,
+        "half": 36,
+        "box": 19,
+        "capsule": 19
+      },
+      "old_retired_still_active": 231,
+      "overdue_active": 156,
+      "oldest_active_age": 6.997000000000672
+    },
+    {
+      "time_s": 7.500000000000839,
+      "spawned": 3176,
+      "starved": 574,
+      "active": 413,
+      "active_by_shape": {
+        "ellipsoid": 399,
+        "half": 12,
+        "box": 2,
+        "capsule": 0
+      },
+      "free_by_shape": {
+        "ellipsoid": 1,
+        "half": 36,
+        "box": 18,
+        "capsule": 20
+      },
+      "old_retired_still_active": 227,
+      "overdue_active": 159,
+      "oldest_active_age": 7.497000000000839
+    },
+    {
+      "time_s": 8.000000000001005,
+      "spawned": 3322,
+      "starved": 678,
+      "active": 414,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 7,
+        "box": 4,
+        "capsule": 3
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 41,
+        "box": 16,
+        "capsule": 17
+      },
+      "old_retired_still_active": 264,
+      "overdue_active": 171,
+      "oldest_active_age": 7.997000000001005
+    },
+    {
+      "time_s": 8.500000000000728,
+      "spawned": 3483,
+      "starved": 767,
+      "active": 416,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 13,
+        "box": 2,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 35,
+        "box": 18,
+        "capsule": 19
+      },
+      "old_retired_still_active": 255,
+      "overdue_active": 182,
+      "oldest_active_age": 8.497000000000728
+    },
+    {
+      "time_s": 9.000000000000451,
+      "spawned": 3631,
+      "starved": 869,
+      "active": 413,
+      "active_by_shape": {
+        "ellipsoid": 399,
+        "half": 11,
+        "box": 2,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 1,
+        "half": 37,
+        "box": 18,
+        "capsule": 19
+      },
+      "old_retired_still_active": 265,
+      "overdue_active": 196,
+      "oldest_active_age": 8.997000000000451
+    },
+    {
+      "time_s": 9.500000000000174,
+      "spawned": 3764,
+      "starved": 986,
+      "active": 412,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 9,
+        "box": 1,
+        "capsule": 2
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 39,
+        "box": 19,
+        "capsule": 18
+      },
+      "old_retired_still_active": 277,
+      "overdue_active": 207,
+      "oldest_active_age": 9.497000000000174
+    },
+    {
+      "time_s": 9.999999999999897,
+      "spawned": 3891,
+      "starved": 1109,
+      "active": 415,
+      "active_by_shape": {
+        "ellipsoid": 399,
+        "half": 12,
+        "box": 1,
+        "capsule": 3
+      },
+      "free_by_shape": {
+        "ellipsoid": 1,
+        "half": 36,
+        "box": 19,
+        "capsule": 17
+      },
+      "old_retired_still_active": 286,
+      "overdue_active": 217,
+      "oldest_active_age": 9.996999999999897
+    },
+    {
+      "time_s": 10.49999999999962,
+      "spawned": 4017,
+      "starved": 1233,
+      "active": 414,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 10,
+        "box": 3,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 38,
+        "box": 17,
+        "capsule": 19
+      },
+      "old_retired_still_active": 288,
+      "overdue_active": 230,
+      "oldest_active_age": 10.49699999999962
+    },
+    {
+      "time_s": 10.999999999999343,
+      "spawned": 4137,
+      "starved": 1363,
+      "active": 419,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 14,
+        "box": 2,
+        "capsule": 3
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 34,
+        "box": 18,
+        "capsule": 17
+      },
+      "old_retired_still_active": 296,
+      "overdue_active": 238,
+      "oldest_active_age": 10.996999999999343
+    },
+    {
+      "time_s": 11.499999999999066,
+      "spawned": 4250,
+      "starved": 1500,
+      "active": 414,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 12,
+        "box": 1,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 36,
+        "box": 19,
+        "capsule": 19
+      },
+      "old_retired_still_active": 301,
+      "overdue_active": 245,
+      "oldest_active_age": 11.496999999999066
+    },
+    {
+      "time_s": 11.999999999998789,
+      "spawned": 4357,
+      "starved": 1643,
+      "active": 419,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 16,
+        "box": 1,
+        "capsule": 2
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 32,
+        "box": 19,
+        "capsule": 18
+      },
+      "old_retired_still_active": 311,
+      "overdue_active": 257,
+      "oldest_active_age": 11.996999999998788
+    },
+    {
+      "time_s": 12.499999999998511,
+      "spawned": 4457,
+      "starved": 1793,
+      "active": 425,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 21,
+        "box": 3,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 27,
+        "box": 17,
+        "capsule": 19
+      },
+      "old_retired_still_active": 323,
+      "overdue_active": 269,
+      "oldest_active_age": 12.496999999998511
+    },
+    {
+      "time_s": 12.999999999998234,
+      "spawned": 4559,
+      "starved": 1941,
+      "active": 421,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 16,
+        "box": 2,
+        "capsule": 3
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 32,
+        "box": 18,
+        "capsule": 17
+      },
+      "old_retired_still_active": 317,
+      "overdue_active": 278,
+      "oldest_active_age": 12.996999999998234
+    },
+    {
+      "time_s": 13.499999999997957,
+      "spawned": 4661,
+      "starved": 2089,
+      "active": 423,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 21,
+        "box": 1,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 27,
+        "box": 19,
+        "capsule": 19
+      },
+      "old_retired_still_active": 320,
+      "overdue_active": 280,
+      "oldest_active_age": 13.496999999997957
+    },
+    {
+      "time_s": 13.99999999999768,
+      "spawned": 4750,
+      "starved": 2250,
+      "active": 423,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 20,
+        "box": 1,
+        "capsule": 2
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 28,
+        "box": 19,
+        "capsule": 18
+      },
+      "old_retired_still_active": 333,
+      "overdue_active": 285,
+      "oldest_active_age": 13.99699999999768
+    },
+    {
+      "time_s": 14.499999999997403,
+      "spawned": 4836,
+      "starved": 2414,
+      "active": 422,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 20,
+        "box": 1,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 28,
+        "box": 19,
+        "capsule": 19
+      },
+      "old_retired_still_active": 334,
+      "overdue_active": 293,
+      "oldest_active_age": 14.496999999997403
+    },
+    {
+      "time_s": 14.999999999997126,
+      "spawned": 4920,
+      "starved": 2580,
+      "active": 425,
+      "active_by_shape": {
+        "ellipsoid": 399,
+        "half": 22,
+        "box": 2,
+        "capsule": 2
+      },
+      "free_by_shape": {
+        "ellipsoid": 1,
+        "half": 26,
+        "box": 18,
+        "capsule": 18
+      },
+      "old_retired_still_active": 339,
+      "overdue_active": 302,
+      "oldest_active_age": 14.996999999997126
+    },
+    {
+      "time_s": 15.499999999996849,
+      "spawned": 4993,
+      "starved": 2757,
+      "active": 423,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 21,
+        "box": 1,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 27,
+        "box": 19,
+        "capsule": 19
+      },
+      "old_retired_still_active": 349,
+      "overdue_active": 308,
+      "oldest_active_age": 15.496999999996849
+    },
+    {
+      "time_s": 15.999999999996572,
+      "spawned": 5066,
+      "starved": 2934,
+      "active": 423,
+      "active_by_shape": {
+        "ellipsoid": 400,
+        "half": 20,
+        "box": 2,
+        "capsule": 1
+      },
+      "free_by_shape": {
+        "ellipsoid": 0,
+        "half": 28,
+        "box": 18,
+        "capsule": 19
+      },
+      "old_retired_still_active": 346,
+      "overdue_active": 316,
+      "oldest_active_age": 15.996999999996572
+    }
+  ]
+}
