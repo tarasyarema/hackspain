@@ -1,0 +1,36 @@
+{
+  "tests": {
+    "modules": [
+      "test_sim_lifecycle",
+      "test_sim_physics",
+      "test_continuous_engine",
+      "test_metrics",
+      "test_openset"
+    ],
+    "cwd": "/private/tmp/hackspain-cinta-collection-scoring/sim/coffee_sorter",
+    "python": "/Users/taras/Documents/code/hackspain/.venv-coffee/bin/python",
+    "count": 57,
+    "exit_code": 0,
+    "parent_invocation_lock": "/private/tmp/hackspain-coffee-runtime.lock",
+    "lock_protocol": "The parent opened the file, acquired fcntl.LOCK_EX, and waited for subprocess.run before closing it.",
+    "limitation": "The unittest log does not independently record lock acquisition.",
+    "log_sha256": "66e4c3f333435c377191ecb0d41b96fa30b8eaf43f1747d143a81f5202d1cf59"
+  },
+  "future_feed_runner_checks": {
+    "simulation_executed": false,
+    "engine_or_mujoco_imported": false,
+    "cases": [
+      "constructor failure",
+      "run failure",
+      "run and close failures"
+    ],
+    "existing_output_preserved_in_each_case": true,
+    "structured_failure_hashes_verified": true,
+    "syntax_compilation_passed": true,
+    "runner_sha256": "f91a373135bbac59cc5f1dca10145cca04f766c7e2c11e6eca294b35250eba40"
+  },
+  "evidence_manifest_check": {
+    "entries_verified": 141,
+    "uncompressed_hashes_match": true
+  }
+}

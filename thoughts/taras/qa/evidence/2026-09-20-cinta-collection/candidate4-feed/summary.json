@@ -1,0 +1,666 @@
+{
+  "schema_version": 1,
+  "seeds": [
+    11,
+    17,
+    23,
+    31
+  ],
+  "aggregator_sha256": "7bd7636e4090d8bbae7764139303e7c43f3ea94dba26629b56e66ccc9126f825",
+  "output_path": "/private/tmp/cinta-collection-validation/candidate4-feed-summary-attempt-1.json",
+  "existing_output_paths_rejected": true,
+  "input_identities": [
+    {
+      "branch": "baseline",
+      "seed": 11,
+      "path": "/private/tmp/cinta-collection-validation/baseline-feed-11-attempt-1.json",
+      "sha256": "0ac995c595ea9c5ba14439c6f2b58f23ec9172d6f505add5f20168988d882a17",
+      "embedded_hashes": {
+        "source_sha256": {
+          "sim.py": "9382e659b308eae550822d1638cc2e7a1db81f9e52b1897ff0eaad12138bd86d",
+          "engine.py": "c1df205ced0bdf6bfce8711a9254493611da520ffe60cdcef940f3808aef9a3c",
+          "rolling_scores.py": "336623e33f40074077c4c47282fd896b3087e2ec77037075864a44ddc30b395a",
+          "controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+          "scene.py": "5fff8ea2b049fcf58556599c05e5d4585dd445dc4aa6615d9e1021b813982a27",
+          "profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899"
+        },
+        "model_sha256": "f5b26f26aed62db18fbef23b4df712b96b2946b1ae2fce699e1a2e85a20844a3",
+        "preset_sha256": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+        "runner_sha256": "37b9fcd95656ff79fdc4c397d4b1dc461e6a01bc46aa9707417482745082857c"
+      }
+    },
+    {
+      "branch": "baseline",
+      "seed": 17,
+      "path": "/private/tmp/cinta-collection-validation/baseline-feed-17-attempt-1.json",
+      "sha256": "2b5c317171e9217caa2dc61820da008bddb9ca76ecbe0496471c31a049a1ec2f",
+      "embedded_hashes": {
+        "source_sha256": {
+          "sim.py": "9382e659b308eae550822d1638cc2e7a1db81f9e52b1897ff0eaad12138bd86d",
+          "engine.py": "c1df205ced0bdf6bfce8711a9254493611da520ffe60cdcef940f3808aef9a3c",
+          "rolling_scores.py": "336623e33f40074077c4c47282fd896b3087e2ec77037075864a44ddc30b395a",
+          "controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+          "scene.py": "5fff8ea2b049fcf58556599c05e5d4585dd445dc4aa6615d9e1021b813982a27",
+          "profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899"
+        },
+        "model_sha256": "f5b26f26aed62db18fbef23b4df712b96b2946b1ae2fce699e1a2e85a20844a3",
+        "preset_sha256": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+        "runner_sha256": "37b9fcd95656ff79fdc4c397d4b1dc461e6a01bc46aa9707417482745082857c"
+      }
+    },
+    {
+      "branch": "baseline",
+      "seed": 23,
+      "path": "/private/tmp/cinta-collection-validation/baseline-feed-23-attempt-1.json",
+      "sha256": "1d1018197c7399eac0d340fb9abae7ca24e6e57e191bdf924a301db414807ada",
+      "embedded_hashes": {
+        "source_sha256": {
+          "sim.py": "9382e659b308eae550822d1638cc2e7a1db81f9e52b1897ff0eaad12138bd86d",
+          "engine.py": "c1df205ced0bdf6bfce8711a9254493611da520ffe60cdcef940f3808aef9a3c",
+          "rolling_scores.py": "336623e33f40074077c4c47282fd896b3087e2ec77037075864a44ddc30b395a",
+          "controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+          "scene.py": "5fff8ea2b049fcf58556599c05e5d4585dd445dc4aa6615d9e1021b813982a27",
+          "profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899"
+        },
+        "model_sha256": "f5b26f26aed62db18fbef23b4df712b96b2946b1ae2fce699e1a2e85a20844a3",
+        "preset_sha256": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+        "runner_sha256": "37b9fcd95656ff79fdc4c397d4b1dc461e6a01bc46aa9707417482745082857c"
+      }
+    },
+    {
+      "branch": "baseline",
+      "seed": 31,
+      "path": "/private/tmp/cinta-collection-validation/baseline-feed-31-attempt-1.json",
+      "sha256": "30770471c71b3f283c1888e416139d3bb975e4a42e20f07f2e4f320db5cfed33",
+      "embedded_hashes": {
+        "source_sha256": {
+          "sim.py": "9382e659b308eae550822d1638cc2e7a1db81f9e52b1897ff0eaad12138bd86d",
+          "engine.py": "c1df205ced0bdf6bfce8711a9254493611da520ffe60cdcef940f3808aef9a3c",
+          "rolling_scores.py": "336623e33f40074077c4c47282fd896b3087e2ec77037075864a44ddc30b395a",
+          "controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+          "scene.py": "5fff8ea2b049fcf58556599c05e5d4585dd445dc4aa6615d9e1021b813982a27",
+          "profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899"
+        },
+        "model_sha256": "f5b26f26aed62db18fbef23b4df712b96b2946b1ae2fce699e1a2e85a20844a3",
+        "preset_sha256": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+        "runner_sha256": "37b9fcd95656ff79fdc4c397d4b1dc461e6a01bc46aa9707417482745082857c"
+      }
+    },
+    {
+      "branch": "candidate4",
+      "seed": 11,
+      "path": "/private/tmp/cinta-collection-validation/candidate4-feed-11-attempt-1.json",
+      "sha256": "73541446f08dddc6f35d2c3193da6333f0d47f555e1fd28f2cf500e0a229b2b4",
+      "embedded_hashes": {
+        "source_sha256": {
+          "sim.py": "b66b440d156d6f1e0f2096b6ce740fc3e2dc4760a3205e84085b1ae8065f1114",
+          "engine.py": "ca2db6187bd2523e44af401c68c86f95fed5f715bd2b0f0d4cf5e6062e2e1a89",
+          "rolling_scores.py": "d3ad84f67d17b3a8861ec604e084661313a988dceddc0c131ac6e5149a9e9f4c",
+          "controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+          "scene.py": "116fbb854a877604308a3fbbc924c4b0733035cd5fe6e2ffd265ebf75418ce5b",
+          "profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899"
+        },
+        "model_sha256": "f5b26f26aed62db18fbef23b4df712b96b2946b1ae2fce699e1a2e85a20844a3",
+        "preset_sha256": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+        "runner_sha256": "c46f30aa2e5c0ff5cee34c30268b754e8ef8d70eae5da9357eb58b6bccedea15"
+      }
+    },
+    {
+      "branch": "candidate4",
+      "seed": 17,
+      "path": "/private/tmp/cinta-collection-validation/candidate4-feed-17-attempt-1.json",
+      "sha256": "d2aa663d78c7bf466b7c47c7ba8ea9aded7b8f60f7037ad4acfab8f2e841c9e5",
+      "embedded_hashes": {
+        "source_sha256": {
+          "sim.py": "b66b440d156d6f1e0f2096b6ce740fc3e2dc4760a3205e84085b1ae8065f1114",
+          "engine.py": "ca2db6187bd2523e44af401c68c86f95fed5f715bd2b0f0d4cf5e6062e2e1a89",
+          "rolling_scores.py": "d3ad84f67d17b3a8861ec604e084661313a988dceddc0c131ac6e5149a9e9f4c",
+          "controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+          "scene.py": "116fbb854a877604308a3fbbc924c4b0733035cd5fe6e2ffd265ebf75418ce5b",
+          "profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899"
+        },
+        "model_sha256": "f5b26f26aed62db18fbef23b4df712b96b2946b1ae2fce699e1a2e85a20844a3",
+        "preset_sha256": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+        "runner_sha256": "c46f30aa2e5c0ff5cee34c30268b754e8ef8d70eae5da9357eb58b6bccedea15"
+      }
+    },
+    {
+      "branch": "candidate4",
+      "seed": 23,
+      "path": "/private/tmp/cinta-collection-validation/candidate4-feed-23-attempt-1.json",
+      "sha256": "ff6e7ef8db6256a076a282c5c58173f90a302140ab720a776ba8868095d0f5e0",
+      "embedded_hashes": {
+        "source_sha256": {
+          "sim.py": "b66b440d156d6f1e0f2096b6ce740fc3e2dc4760a3205e84085b1ae8065f1114",
+          "engine.py": "ca2db6187bd2523e44af401c68c86f95fed5f715bd2b0f0d4cf5e6062e2e1a89",
+          "rolling_scores.py": "d3ad84f67d17b3a8861ec604e084661313a988dceddc0c131ac6e5149a9e9f4c",
+          "controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+          "scene.py": "116fbb854a877604308a3fbbc924c4b0733035cd5fe6e2ffd265ebf75418ce5b",
+          "profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899"
+        },
+        "model_sha256": "f5b26f26aed62db18fbef23b4df712b96b2946b1ae2fce699e1a2e85a20844a3",
+        "preset_sha256": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+        "runner_sha256": "c46f30aa2e5c0ff5cee34c30268b754e8ef8d70eae5da9357eb58b6bccedea15"
+      }
+    },
+    {
+      "branch": "candidate4",
+      "seed": 31,
+      "path": "/private/tmp/cinta-collection-validation/candidate4-feed-31-attempt-1.json",
+      "sha256": "be9870334df0ca8a3fb7d35f0a94750ee31d9fbbd6d5706c9b04d5b38ec1d0d1",
+      "embedded_hashes": {
+        "source_sha256": {
+          "sim.py": "b66b440d156d6f1e0f2096b6ce740fc3e2dc4760a3205e84085b1ae8065f1114",
+          "engine.py": "ca2db6187bd2523e44af401c68c86f95fed5f715bd2b0f0d4cf5e6062e2e1a89",
+          "rolling_scores.py": "d3ad84f67d17b3a8861ec604e084661313a988dceddc0c131ac6e5149a9e9f4c",
+          "controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+          "scene.py": "116fbb854a877604308a3fbbc924c4b0733035cd5fe6e2ffd265ebf75418ce5b",
+          "profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899"
+        },
+        "model_sha256": "f5b26f26aed62db18fbef23b4df712b96b2946b1ae2fce699e1a2e85a20844a3",
+        "preset_sha256": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+        "runner_sha256": "c46f30aa2e5c0ff5cee34c30268b754e8ef8d70eae5da9357eb58b6bccedea15"
+      }
+    }
+  ],
+  "baseline": {
+    "per_seed": {
+      "11": {
+        "spawned": 2000,
+        "admitted": 2000,
+        "starved": 0,
+        "resolved": 1773,
+        "cohort_objects": 1050,
+        "reject_required": 149,
+        "reject_captured": 140,
+        "reject_capture_rate": 0.9395973154362416,
+        "keep_required": 901,
+        "keep_lost": 37,
+        "keep_loss_rate": 0.041065482796892344,
+        "spill": 2,
+        "spill_rate": 0.0019047619047619048,
+        "unresolved": 0,
+        "unresolved_rate": 0.0,
+        "overdue_unresolved": 0,
+        "late_resolution_count": 0,
+        "max_resolution_age_s": 0.47899999999994725,
+        "wall_s": 28.34197925007902,
+        "cpu_s": 24.733308,
+        "peak_rss_bytes": 304463872,
+        "max_active": 260
+      },
+      "17": {
+        "spawned": 2000,
+        "admitted": 2000,
+        "starved": 0,
+        "resolved": 1774,
+        "cohort_objects": 1050,
+        "reject_required": 154,
+        "reject_captured": 135,
+        "reject_capture_rate": 0.8766233766233766,
+        "keep_required": 896,
+        "keep_lost": 40,
+        "keep_loss_rate": 0.044642857142857144,
+        "spill": 2,
+        "spill_rate": 0.0019047619047619048,
+        "unresolved": 0,
+        "unresolved_rate": 0.0,
+        "overdue_unresolved": 0,
+        "late_resolution_count": 0,
+        "max_resolution_age_s": 0.4759999999999478,
+        "wall_s": 22.692516583949327,
+        "cpu_s": 23.698045,
+        "peak_rss_bytes": 307986432,
+        "max_active": 259
+      },
+      "23": {
+        "spawned": 2000,
+        "admitted": 2000,
+        "starved": 0,
+        "resolved": 1774,
+        "cohort_objects": 1050,
+        "reject_required": 153,
+        "reject_captured": 142,
+        "reject_capture_rate": 0.9281045751633987,
+        "keep_required": 897,
+        "keep_lost": 42,
+        "keep_loss_rate": 0.046822742474916385,
+        "spill": 0,
+        "spill_rate": 0.0,
+        "unresolved": 0,
+        "unresolved_rate": 0.0,
+        "overdue_unresolved": 0,
+        "late_resolution_count": 0,
+        "max_resolution_age_s": 0.47899999999994725,
+        "wall_s": 27.08160987496376,
+        "cpu_s": 26.874024,
+        "peak_rss_bytes": 307314688,
+        "max_active": 260
+      },
+      "31": {
+        "spawned": 2000,
+        "admitted": 2000,
+        "starved": 0,
+        "resolved": 1775,
+        "cohort_objects": 1050,
+        "reject_required": 162,
+        "reject_captured": 146,
+        "reject_capture_rate": 0.9012345679012346,
+        "keep_required": 888,
+        "keep_lost": 26,
+        "keep_loss_rate": 0.02927927927927928,
+        "spill": 4,
+        "spill_rate": 0.0038095238095238095,
+        "unresolved": 0,
+        "unresolved_rate": 0.0,
+        "overdue_unresolved": 0,
+        "late_resolution_count": 0,
+        "max_resolution_age_s": 0.47999999999994714,
+        "wall_s": 21.820518207969144,
+        "cpu_s": 22.704524000000003,
+        "peak_rss_bytes": 307658752,
+        "max_active": 261
+      }
+    },
+    "aggregate": {
+      "spawned": 8000,
+      "admitted": 8000,
+      "starved": 0,
+      "resolved": 7096,
+      "cohort_objects": 4200,
+      "reject_required": 618,
+      "reject_captured": 563,
+      "keep_required": 3582,
+      "keep_lost": 145,
+      "spill": 8,
+      "unresolved": 0,
+      "overdue_unresolved": 0,
+      "late_resolution_count": 0,
+      "max_resolution_age_s": 0.47999999999994714,
+      "wall_s": 99.93662391696125,
+      "cpu_s": 98.009901,
+      "peak_rss_bytes": 307986432,
+      "max_active": 261,
+      "reject_capture_rate": 0.9110032362459547,
+      "keep_loss_rate": 0.040480178671133446,
+      "spill_rate": 0.0019047619047619048,
+      "unresolved_rate": 0.0
+    }
+  },
+  "candidate4": {
+    "per_seed": {
+      "11": {
+        "spawned": 2000,
+        "admitted": 2000,
+        "starved": 0,
+        "resolved": 1721,
+        "cohort_objects": 1050,
+        "reject_required": 151,
+        "reject_captured": 145,
+        "reject_capture_rate": 0.9602649006622517,
+        "keep_required": 899,
+        "keep_lost": 40,
+        "keep_loss_rate": 0.04449388209121246,
+        "spill": 1,
+        "spill_rate": 0.0009523809523809524,
+        "unresolved": 0,
+        "unresolved_rate": 0.0,
+        "overdue_unresolved": 0,
+        "late_resolution_count": 0,
+        "max_resolution_age_s": 0.7379999999999187,
+        "wall_s": 23.68382945889607,
+        "cpu_s": 24.484150999999997,
+        "peak_rss_bytes": 308756480,
+        "max_active": 284
+      },
+      "17": {
+        "spawned": 2000,
+        "admitted": 2000,
+        "starved": 0,
+        "resolved": 1720,
+        "cohort_objects": 1050,
+        "reject_required": 155,
+        "reject_captured": 145,
+        "reject_capture_rate": 0.9354838709677419,
+        "keep_required": 895,
+        "keep_lost": 61,
+        "keep_loss_rate": 0.06815642458100558,
+        "spill": 4,
+        "spill_rate": 0.0038095238095238095,
+        "unresolved": 0,
+        "unresolved_rate": 0.0,
+        "overdue_unresolved": 0,
+        "late_resolution_count": 0,
+        "max_resolution_age_s": 0.7809999999999142,
+        "wall_s": 24.26660062512383,
+        "cpu_s": 24.856174,
+        "peak_rss_bytes": 308248576,
+        "max_active": 286
+      },
+      "23": {
+        "spawned": 2000,
+        "admitted": 2000,
+        "starved": 0,
+        "resolved": 1720,
+        "cohort_objects": 1050,
+        "reject_required": 153,
+        "reject_captured": 147,
+        "reject_capture_rate": 0.9607843137254902,
+        "keep_required": 897,
+        "keep_lost": 56,
+        "keep_loss_rate": 0.06243032329988852,
+        "spill": 1,
+        "spill_rate": 0.0009523809523809524,
+        "unresolved": 0,
+        "unresolved_rate": 0.0,
+        "overdue_unresolved": 0,
+        "late_resolution_count": 0,
+        "max_resolution_age_s": 0.7359999999999189,
+        "wall_s": 31.161301375133917,
+        "cpu_s": 27.342290000000002,
+        "peak_rss_bytes": 302694400,
+        "max_active": 287
+      },
+      "31": {
+        "spawned": 2000,
+        "admitted": 2000,
+        "starved": 0,
+        "resolved": 1718,
+        "cohort_objects": 1050,
+        "reject_required": 162,
+        "reject_captured": 154,
+        "reject_capture_rate": 0.9506172839506173,
+        "keep_required": 888,
+        "keep_lost": 37,
+        "keep_loss_rate": 0.041666666666666664,
+        "spill": 1,
+        "spill_rate": 0.0009523809523809524,
+        "unresolved": 0,
+        "unresolved_rate": 0.0,
+        "overdue_unresolved": 0,
+        "late_resolution_count": 0,
+        "max_resolution_age_s": 0.8429999999999074,
+        "wall_s": 24.55717962514609,
+        "cpu_s": 25.079935,
+        "peak_rss_bytes": 308133888,
+        "max_active": 287
+      }
+    },
+    "aggregate": {
+      "spawned": 8000,
+      "admitted": 8000,
+      "starved": 0,
+      "resolved": 6879,
+      "cohort_objects": 4200,
+      "reject_required": 621,
+      "reject_captured": 591,
+      "keep_required": 3579,
+      "keep_lost": 194,
+      "spill": 7,
+      "unresolved": 0,
+      "overdue_unresolved": 0,
+      "late_resolution_count": 0,
+      "max_resolution_age_s": 0.8429999999999074,
+      "wall_s": 103.6689110842999,
+      "cpu_s": 101.76255,
+      "peak_rss_bytes": 308756480,
+      "max_active": 287,
+      "reject_capture_rate": 0.9516908212560387,
+      "keep_loss_rate": 0.05420508521933501,
+      "spill_rate": 0.0016666666666666668,
+      "unresolved_rate": 0.0
+    }
+  },
+  "comparison": {
+    "changes": {
+      "spawned": {
+        "baseline": 8000,
+        "candidate": 8000,
+        "relative_change": 0.0
+      },
+      "admitted": {
+        "baseline": 8000,
+        "candidate": 8000,
+        "relative_change": 0.0
+      },
+      "resolved": {
+        "baseline": 7096,
+        "candidate": 6879,
+        "relative_change": -0.030580608793686584
+      },
+      "starved": {
+        "baseline": 0,
+        "candidate": 0,
+        "relative_change": null
+      },
+      "wall_s": {
+        "baseline": 99.93662391696125,
+        "candidate": 103.6689110842999,
+        "relative_change": 0.03734654044787289
+      },
+      "cpu_s": {
+        "baseline": 98.009901,
+        "candidate": 101.76255,
+        "relative_change": 0.0382884684272868
+      },
+      "peak_rss_bytes": {
+        "baseline": 307986432,
+        "candidate": 308756480,
+        "relative_change": 0.002500265985743164
+      },
+      "max_active": {
+        "baseline": 261,
+        "candidate": 287,
+        "relative_change": 0.09961685823754789
+      },
+      "late_resolution_count": {
+        "baseline": 0,
+        "candidate": 0,
+        "change": 0
+      },
+      "reject_capture_rate": {
+        "baseline": 0.9110032362459547,
+        "candidate": 0.9516908212560387,
+        "change_percentage_points": 4.068758501008396
+      },
+      "keep_loss_rate": {
+        "baseline": 0.040480178671133446,
+        "candidate": 0.05420508521933501,
+        "change_percentage_points": 1.3724906548201563
+      },
+      "spill_rate": {
+        "baseline": 0.0019047619047619048,
+        "candidate": 0.0016666666666666668,
+        "change_percentage_points": -0.023809523809523798
+      },
+      "overdue_unresolved": {
+        "baseline": 0,
+        "candidate": 0,
+        "change": 0
+      }
+    },
+    "thresholds": {
+      "reject_capture_no_regression": "candidate >= baseline",
+      "keep_loss_change_max_percentage_points": 1.0,
+      "spill_change_max_percentage_points": 0.5,
+      "admitted_relative_change_max": 0.05,
+      "resolved_relative_change_max": 0.05,
+      "starvation": "candidate <= baseline",
+      "wall_relative_change_max": 0.05,
+      "peak_rss_relative_change_max": 0.05,
+      "overdue_unresolved": 0,
+      "late_resolution_count": 0,
+      "cpu_gate": null
+    },
+    "gates": {
+      "reject_capture_no_regression": true,
+      "keep_loss": false,
+      "spill": true,
+      "admitted_within_5_percent": true,
+      "resolved_within_5_percent": true,
+      "starvation_no_increase": true,
+      "wall_within_5_percent": true,
+      "rss_within_5_percent": true,
+      "no_overdue_unresolved": true,
+      "no_late_resolutions": true
+    }
+  },
+  "targeted_good_seed31": {
+    "353": {
+      "expectedAccept": true,
+      "actual_outcome": "reject",
+      "actualReject": true,
+      "jet_hits": 3,
+      "own_pulse_hit": true,
+      "associated_rejection_tracks": [
+        346
+      ],
+      "activated_rejection_tracks": [
+        346
+      ],
+      "spawn_s": 0.7070000000000005,
+      "quality_cohort_included": false,
+      "warmup_note": "before 0.8 seconds, excluded from quality cohort",
+      "target_decisions": [
+        {
+          "track": 346,
+          "class": "stick",
+          "reject": true,
+          "scheduled": true,
+          "late": false,
+          "pulse_s": 0.0024000000000000002,
+          "target_uids": [
+            343,
+            353
+          ],
+          "probabilities": {
+            "good": 9.517287585431672e-06,
+            "faded": 1.188789871338176e-05,
+            "black": 5.876652624172947e-10,
+            "sour": 5.387038340933689e-10,
+            "insect": 9.649563390534109e-10,
+            "broken": 7.760043709049923e-07,
+            "shell": 5.172123601254744e-10,
+            "husk": 1.9718305677095254e-09,
+            "stone": 5.396827345295059e-06,
+            "stick": 0.9999724174016166
+          },
+          "anomaly_score": 146.90743963872242,
+          "anomaly_threshold": 14.96062187496633,
+          "anomaly_enabled": true,
+          "anomaly_triggered": true,
+          "predicted_class": "stick",
+          "combined_reject": true,
+          "reject_probability": 0.9999904827124145,
+          "reject_threshold": 0.8,
+          "class_threshold_reject": true,
+          "decision_time_s": 1.0000000000000007,
+          "available_time_s": 1.014596874868498,
+          "fire_time_s": 1.072856425394091,
+          "nozzles": [
+            12,
+            11
+          ],
+          "fires": [
+            {
+              "nozzle": 12,
+              "t_on": 1.071356425394091,
+              "t_off": 1.074756425394091,
+              "force_n": 0.027508512823553134,
+              "track": 346
+            },
+            {
+              "nozzle": 11,
+              "t_on": 1.071356425394091,
+              "t_off": 1.074756425394091,
+              "force_n": 0.027508512823553134,
+              "track": 346
+            }
+          ]
+        }
+      ]
+    },
+    "841": {
+      "expectedAccept": true,
+      "actual_outcome": "reject",
+      "actualReject": true,
+      "jet_hits": 3,
+      "own_pulse_hit": true,
+      "associated_rejection_tracks": [
+        835
+      ],
+      "activated_rejection_tracks": [
+        835
+      ],
+      "spawn_s": 1.6829999999999254,
+      "quality_cohort_included": true,
+      "warmup_note": "included in quality cohort",
+      "target_decisions": [
+        {
+          "track": 835,
+          "class": "stick",
+          "reject": true,
+          "scheduled": true,
+          "late": false,
+          "pulse_s": 0.0024000000000000002,
+          "target_uids": [
+            841,
+            843
+          ],
+          "probabilities": {
+            "good": 1.0907655809233573e-06,
+            "faded": 9.6134646595201e-08,
+            "black": 5.876766013651466e-10,
+            "sour": 5.387142283349091e-10,
+            "insect": 9.68212728034399e-10,
+            "broken": 1.6877455883384572e-06,
+            "shell": 1.2577667760906913e-08,
+            "husk": 1.971868614001198e-09,
+            "stone": 5.396931476588411e-06,
+            "stick": 0.9999917117785677
+          },
+          "anomaly_score": 199.5965061332837,
+          "anomaly_threshold": 14.96062187496633,
+          "anomaly_enabled": true,
+          "anomaly_triggered": true,
+          "predicted_class": "stick",
+          "combined_reject": true,
+          "reject_probability": 0.9999989092344191,
+          "reject_threshold": 0.8,
+          "class_threshold_reject": true,
+          "decision_time_s": 1.9799999999998927,
+          "available_time_s": 1.9956774172055394,
+          "fire_time_s": 2.05089992650576,
+          "nozzles": [
+            61,
+            62
+          ],
+          "fires": [
+            {
+              "nozzle": 61,
+              "t_on": 2.04939992650576,
+              "t_off": 2.05279992650576,
+              "force_n": 0.027507451886768574,
+              "track": 835
+            },
+            {
+              "nozzle": 62,
+              "t_on": 2.04939992650576,
+              "t_off": 2.05279992650576,
+              "force_n": 0.027507451886768574,
+              "track": 835
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "interpretation": {
+    "baseline_definition": "The baseline uses the old invalid early scorer.",
+    "comparison_limit": "This compares changed outcome definitions. It does not prove physical accuracy.",
+    "performance_limit": "Baseline performance was measured earlier, not in a contemporary paired execution.",
+    "quality_limit": "Quality success is not inferred from resolution.",
+    "warmup": "UID353 spawned before 0.8 seconds and is excluded. UID841 is included.",
+    "cpu": "CPU time is reported separately and has no gate."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "candidate4-feed-11-attempt-1.json": "73541446f08dddc6f35d2c3193da6333f0d47f555e1fd28f2cf500e0a229b2b4",
+  "candidate4-feed-11-attempt-1.log": "22f369376ddaadce3dc5319202f4a46d9dfd0767431039f081eab6e100ca61d6",
+  "candidate4-feed-17-attempt-1.json": "d2aa663d78c7bf466b7c47c7ba8ea9aded7b8f60f7037ad4acfab8f2e841c9e5",
+  "candidate4-feed-17-attempt-1.log": "5243d86c1969fcec387a52cc903b8869088a35fbf0842c7d64a189f8eb270fae",
+  "candidate4-feed-23-attempt-1.json": "ff6e7ef8db6256a076a282c5c58173f90a302140ab720a776ba8868095d0f5e0",
+  "candidate4-feed-23-attempt-1.log": "fd758c7635743693293c6c39424d065808605bb2d309061f60b53bb30651810b",
+  "candidate4-feed-31-attempt-1.json": "be9870334df0ca8a3fb7d35f0a94750ee31d9fbbd6d5706c9b04d5b38ec1d0d1",
+  "candidate4-feed-31-attempt-1.log": "6562dbba16a589a224bbe53497abe90aba91650d6eafa3a5fc90b3ad03b37842",
+  "summary.json": "4bf69e096502f3f17ff68d4b53f96442c6287e90cb46cdfa1ff5d98f0b165fa2",
+  "focused-tests.log": "66e4c3f333435c377191ecb0d41b96fa30b8eaf43f1747d143a81f5202d1cf59",
+  "runner.py": "c46f30aa2e5c0ff5cee34c30268b754e8ef8d70eae5da9357eb58b6bccedea15",
+  "summary-runner.py": "7bd7636e4090d8bbae7764139303e7c43f3ea94dba26629b56e66ccc9126f825",
+  "scene.py": "116fbb854a877604308a3fbbc924c4b0733035cd5fe6e2ffd265ebf75418ce5b",
+  "validation-record.json": "942c1c4baed3baf58500d9e42352e221c850220eecea1e4bd008dec8201871eb",
+  "keep-loss-audit.json": "5deb8756b23fdfb159ac65f898602c7d8d1a89f5c3a709fe631b18682e0f1b94",
+  "keep-loss-audit.md": "960574889477aa2472fc727db1837d599905c2138987b545c4787f878f9e70ab"
+}

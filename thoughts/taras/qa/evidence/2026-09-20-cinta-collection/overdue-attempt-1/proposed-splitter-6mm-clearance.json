@@ -1,0 +1,125 @@
+{
+  "method": "15-axis oriented-box separation using stored unchanged-splitter trajectories. Negative values indicate static overlap, not a rerun prediction.",
+  "old_center_m": [
+    0.48,
+    0.0,
+    0.475
+  ],
+  "proposed_half_size_m": [
+    0.14,
+    0.27,
+    0.006
+  ],
+  "proposed_center_m": [
+    0.4790103841629819,
+    0.0,
+    0.4711243503131574
+  ],
+  "preserved_top_center_m": [
+    0.48049480791850907,
+    0.0,
+    0.4769378248434213
+  ],
+  "reject_clearance": [
+    {
+      "seed": 42,
+      "reuse": 0,
+      "minimum_old_separating_gap_m": 0.015233553346637348,
+      "minimum_proposed_separating_gap_m": 0.008410558972002258,
+      "new_overlap_steps": 0,
+      "first_new_overlap": null,
+      "last_new_overlap": null
+    },
+    {
+      "seed": 42,
+      "reuse": 1,
+      "minimum_old_separating_gap_m": 0.04069792800159291,
+      "minimum_proposed_separating_gap_m": 0.032697928001592935,
+      "new_overlap_steps": 0,
+      "first_new_overlap": null,
+      "last_new_overlap": null
+    },
+    {
+      "seed": 7,
+      "reuse": 0,
+      "minimum_old_separating_gap_m": 0.008923103608444978,
+      "minimum_proposed_separating_gap_m": 0.002728496454094854,
+      "new_overlap_steps": 0,
+      "first_new_overlap": null,
+      "last_new_overlap": null
+    },
+    {
+      "seed": 7,
+      "reuse": 1,
+      "minimum_old_separating_gap_m": 0.006445035141427906,
+      "minimum_proposed_separating_gap_m": 0.00018950951896448947,
+      "new_overlap_steps": 0,
+      "first_new_overlap": null,
+      "last_new_overlap": null
+    },
+    {
+      "seed": 8,
+      "reuse": 0,
+      "minimum_old_separating_gap_m": -0.001629478617423321,
+      "minimum_proposed_separating_gap_m": -0.007345107108525396,
+      "new_overlap_steps": 7,
+      "first_new_overlap": {
+        "time_s": 0.45600000000000035,
+        "position_m": [
+          0.3473703678905282,
+          -0.11996085218024456,
+          0.5024985167138803
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 0.46200000000000035,
+        "position_m": [
+          0.35845888936452,
+          -0.12125588567849822,
+          0.4925192573684332
+        ]
+      }
+    },
+    {
+      "seed": 8,
+      "reuse": 1,
+      "minimum_old_separating_gap_m": 0.0048762203749359335,
+      "minimum_proposed_separating_gap_m": -0.0022880527813605375,
+      "new_overlap_steps": 3,
+      "first_new_overlap": {
+        "time_s": 1.0020000000000004,
+        "position_m": [
+          0.33969358271823463,
+          -0.057276938149011254,
+          0.4990329248483273
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 1.0040000000000002,
+        "position_m": [
+          0.3456992612134228,
+          -0.057284861396565225,
+          0.4957499032525725
+        ]
+      }
+    },
+    {
+      "seed": 9,
+      "reuse": 0,
+      "minimum_old_separating_gap_m": 0.02590827408024699,
+      "minimum_proposed_separating_gap_m": 0.01790827408024701,
+      "new_overlap_steps": 0,
+      "first_new_overlap": null,
+      "last_new_overlap": null
+    },
+    {
+      "seed": 9,
+      "reuse": 1,
+      "minimum_old_separating_gap_m": 0.011095874105274024,
+      "minimum_proposed_separating_gap_m": 0.004813118891057381,
+      "new_overlap_steps": 0,
+      "first_new_overlap": null,
+      "last_new_overlap": null
+    }
+  ]
+}

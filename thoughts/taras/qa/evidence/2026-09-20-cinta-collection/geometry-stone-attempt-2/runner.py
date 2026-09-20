@@ -142,8 +142,6 @@ def positive_contacts(sim, data, body: int, time_s: float | None = None) -> list
             ),
             "normal_force_n": float(force[0]),
             "normal_world": [float(value) for value in contact.frame[:3]],
-            "geom_ids": [int(contact.geom1), int(contact.geom2)],
-            "target_geom_id": int(sim.body_col[body]),
             "solver_reference": [float(value) for value in contact.solref],
             "distance_m": float(contact.dist),
             "solve_time_s": float(data.time if time_s is None else time_s),
@@ -829,8 +827,8 @@ def main() -> int:
         }
     json_write(output_dir / "summary.json", summary)
     print(json.dumps({"output_dir": str(output_dir), **summary}, allow_nan=False))
-    failed_collection = args.mode == "stone" and not summary["collection_validation"]["passed"]
-    return 1 if summary["error_runs"] or failed_collection else 0
+    failed_support = args.observe_support and not summary["collection_validation"]["passed"]
+    return 1 if summary["error_runs"] or failed_support else 0
 
 
 if __name__ == "__main__":

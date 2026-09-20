@@ -1,0 +1,323 @@
+{
+  "strict_force_equality_passed": false,
+  "strict_comparison_failure": "AssertionError: byte-identical actual force histories differ for both Good targets. Physical sample identities pass.",
+  "seeds": {
+    "17": {
+      "319": {
+        "physical_sample_equal_excluding_pool_body": true,
+        "old_body": 471,
+        "new_body": 471,
+        "nonzero_force_history_equal": true,
+        "force_step_times_equal": true,
+        "old_nonzero_force_history": [
+          [
+            1.0219999999999982,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ],
+          [
+            1.0229999999999981,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ],
+          [
+            1.023999999999998,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ],
+          [
+            1.024999999999998,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ],
+          [
+            1.0259999999999978,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ]
+        ],
+        "new_nonzero_force_history": [
+          [
+            1.0219999999999982,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ],
+          [
+            1.0229999999999981,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ],
+          [
+            1.023999999999998,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ],
+          [
+            1.024999999999998,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ],
+          [
+            1.0259999999999978,
+            [
+              0.0,
+              0.0,
+              -0.06
+            ]
+          ]
+        ],
+        "maximum_force_difference_n": 0.0,
+        "expected_class_policy_outcome": "reject",
+        "actual_outcome": "reject",
+        "resolution_age_s": 0.652999999999968,
+        "splitter_contact_steps": 7,
+        "last_splitter_contact_observation_s": 1.1089999999999887,
+        "opposed_face_steps": 0,
+        "controller_record": {
+          "decisions": [
+            {
+              "track_id": 317,
+              "sim_time_s": 0.9520000000000007,
+              "predicted_class": "stone",
+              "reject": true,
+              "scheduled": true,
+              "late": false,
+              "association": "current_component",
+              "association_approximate": true,
+              "object_ids": [
+                319
+              ]
+            }
+          ],
+          "associated_rejection_tracks": [
+            317
+          ],
+          "activated_rejection_tracks": [
+            317
+          ],
+          "own_pulse_hit": true,
+          "jet_hits": 5,
+          "outcome": "reject",
+          "resolved_time_s": 1.2919999999999685
+        }
+      }
+    },
+    "31": {
+      "353": {
+        "physical_sample_equal_excluding_pool_body": true,
+        "old_body": 349,
+        "new_body": 342,
+        "nonzero_force_history_equal": false,
+        "force_step_times_equal": true,
+        "old_nonzero_force_history": [
+          [
+            1.0729999999999926,
+            [
+              0.0,
+              0.0,
+              -0.02750860883825821
+            ]
+          ],
+          [
+            1.0739999999999925,
+            [
+              0.0,
+              0.0,
+              -0.02750860883825821
+            ]
+          ],
+          [
+            1.0749999999999924,
+            [
+              0.0,
+              0.0,
+              -0.02750860883825821
+            ]
+          ]
+        ],
+        "new_nonzero_force_history": [
+          [
+            1.0729999999999926,
+            [
+              0.0,
+              0.0,
+              -0.027508512823553134
+            ]
+          ],
+          [
+            1.0739999999999925,
+            [
+              0.0,
+              0.0,
+              -0.027508512823553134
+            ]
+          ],
+          [
+            1.0749999999999924,
+            [
+              0.0,
+              0.0,
+              -0.027508512823553134
+            ]
+          ]
+        ],
+        "maximum_force_difference_n": 9.60147050754756e-08,
+        "expected_class_policy_outcome": "accept",
+        "actual_outcome": "reject",
+        "resolution_age_s": 0.6219999999999639,
+        "splitter_contact_steps": 2,
+        "last_splitter_contact_observation_s": 1.1549999999999836,
+        "opposed_face_steps": 0,
+        "controller_record": {
+          "decisions": [
+            {
+              "track_id": 346,
+              "sim_time_s": 1.0000000000000007,
+              "predicted_class": "stick",
+              "reject": true,
+              "scheduled": true,
+              "late": false,
+              "association": "current_component",
+              "association_approximate": true,
+              "object_ids": [
+                343,
+                353
+              ]
+            }
+          ],
+          "associated_rejection_tracks": [
+            346
+          ],
+          "activated_rejection_tracks": [
+            346
+          ],
+          "own_pulse_hit": true,
+          "jet_hits": 3,
+          "outcome": "reject",
+          "resolved_time_s": 1.3289999999999644
+        }
+      },
+      "841": {
+        "physical_sample_equal_excluding_pool_body": true,
+        "old_body": 132,
+        "new_body": 146,
+        "nonzero_force_history_equal": false,
+        "force_step_times_equal": true,
+        "old_nonzero_force_history": [
+          [
+            2.050999999999885,
+            [
+              0.0,
+              0.0,
+              -0.027507462311663032
+            ]
+          ],
+          [
+            2.051999999999885,
+            [
+              0.0,
+              0.0,
+              -0.027507462311663032
+            ]
+          ],
+          [
+            2.052999999999885,
+            [
+              0.0,
+              0.0,
+              -0.027507462311663032
+            ]
+          ]
+        ],
+        "new_nonzero_force_history": [
+          [
+            2.050999999999885,
+            [
+              0.0,
+              0.0,
+              -0.027507451886768574
+            ]
+          ],
+          [
+            2.051999999999885,
+            [
+              0.0,
+              0.0,
+              -0.027507451886768574
+            ]
+          ],
+          [
+            2.052999999999885,
+            [
+              0.0,
+              0.0,
+              -0.027507451886768574
+            ]
+          ]
+        ],
+        "maximum_force_difference_n": 1.0424894458099798e-08,
+        "expected_class_policy_outcome": "accept",
+        "actual_outcome": "reject",
+        "resolution_age_s": 0.6239999999999315,
+        "splitter_contact_steps": 2,
+        "last_splitter_contact_observation_s": 2.131999999999876,
+        "opposed_face_steps": 0,
+        "controller_record": {
+          "decisions": [
+            {
+              "track_id": 835,
+              "sim_time_s": 1.9799999999998927,
+              "predicted_class": "stick",
+              "reject": true,
+              "scheduled": true,
+              "late": false,
+              "association": "current_component",
+              "association_approximate": true,
+              "object_ids": [
+                841,
+                843
+              ]
+            }
+          ],
+          "associated_rejection_tracks": [
+            835
+          ],
+          "activated_rejection_tracks": [
+            835
+          ],
+          "own_pulse_hit": true,
+          "jet_hits": 3,
+          "outcome": "reject",
+          "resolved_time_s": 2.306999999999857
+        }
+      }
+    }
+  }
+}

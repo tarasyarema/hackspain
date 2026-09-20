@@ -1,0 +1,750 @@
+{
+  "schema_version": 1,
+  "inputs": [
+    "/private/tmp/cinta-collection-validation/overdue-seed-17-attempt-1.json",
+    "/private/tmp/cinta-collection-validation/overdue-seed-31-attempt-1.json",
+    "/private/tmp/cinta-collection-validation/candidate-feed-17-attempt-1.json",
+    "/private/tmp/cinta-collection-validation/candidate-feed-31-attempt-1.json"
+  ],
+  "seeds": {
+    "17": {
+      "seed": 17,
+      "splitter_normal": [
+        0.24740395925452294,
+        0.0,
+        0.9689124217106447
+      ],
+      "targets": {
+        "319": {
+          "sample_and_jet_hit_comparison": {
+            "exact_fields_equal": {
+              "class": true,
+              "mass_kg": true,
+              "axes_m": true,
+              "spawn_time_s": true
+            },
+            "exact_sample_equal": true,
+            "jet_hits_equal": true,
+            "overdue": {
+              "class": "stone",
+              "mass_kg": 0.0007781154584788002,
+              "axes_m": [
+                0.003193667883796532,
+                0.0034002037681945397,
+                0.0034449745120997558
+              ],
+              "spawn_time_s": 0.6390000000000005,
+              "jet_hits": 5
+            },
+            "candidate": {
+              "class": "stone",
+              "mass_kg": 0.0007781154584788002,
+              "axes_m": [
+                0.003193667883796532,
+                0.0034002037681945397,
+                0.0034449745120997558
+              ],
+              "spawn_time_s": 0.6390000000000005,
+              "jet_hits": 5
+            }
+          },
+          "at_4_s": {
+            "time_s": 3.9999999999996705,
+            "position_m": [
+              0.3798021812815063,
+              -0.06585497910793814,
+              0.506201858955508
+            ],
+            "speed_m_s": 0.0001524026721992307,
+            "applied_force_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "contacts": [
+              {
+                "surface": "splitter",
+                "normal": [
+                  0.247403959254523,
+                  0.0,
+                  0.968912421710645
+                ],
+                "samples": 4,
+                "normal_force_total_n": 0.007394098310925002,
+                "normal_force_max_n": 0.0024854755965372124
+              }
+            ],
+            "contact_count": 4,
+            "retirement": null,
+            "engine_record": {
+              "decisions": [
+                {
+                  "track_id": 319,
+                  "sim_time_s": 0.9520000000000007,
+                  "predicted_class": "stone",
+                  "reject": true,
+                  "scheduled": true,
+                  "late": false,
+                  "association": "current_component",
+                  "association_approximate": true,
+                  "object_ids": [
+                    319
+                  ]
+                }
+              ],
+              "associated_rejection_tracks": [
+                319
+              ],
+              "activated_rejection_tracks": [
+                319
+              ],
+              "own_pulse_hit": true,
+              "jet_hits": 5,
+              "outcome": null,
+              "resolved_time_s": null
+            }
+          },
+          "at_5_5_s": {
+            "time_s": 5.500000000000171,
+            "position_m": [
+              0.3800177061815868,
+              -0.06589632912055961,
+              0.506146838682087
+            ],
+            "speed_m_s": 0.0001553578929000066,
+            "applied_force_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "contacts": [
+              {
+                "surface": "splitter",
+                "normal": [
+                  0.247403959254523,
+                  0.0,
+                  0.968912421710645
+                ],
+                "samples": 4,
+                "normal_force_total_n": 0.00739602220012553,
+                "normal_force_max_n": 0.0024896740934646205
+              }
+            ],
+            "contact_count": 4,
+            "retirement": null,
+            "engine_record": {
+              "decisions": [
+                {
+                  "track_id": 319,
+                  "sim_time_s": 0.9520000000000007,
+                  "predicted_class": "stone",
+                  "reject": true,
+                  "scheduled": true,
+                  "late": false,
+                  "association": "current_component",
+                  "association_approximate": true,
+                  "object_ids": [
+                    319
+                  ]
+                }
+              ],
+              "associated_rejection_tracks": [
+                319
+              ],
+              "activated_rejection_tracks": [
+                319
+              ],
+              "own_pulse_hit": true,
+              "jet_hits": 5,
+              "outcome": null,
+              "resolved_time_s": null
+            }
+          },
+          "displacement_m": [
+            0.0002155249000805326,
+            -4.135001262146887e-05,
+            -5.502027342096927e-05
+          ],
+          "displacement_norm_m": 0.00022624773277502122,
+          "final_100": {
+            "sample_count": 100,
+            "splitter_contact_samples": 100,
+            "splitter_contact_fraction": 1.0,
+            "all_applied_force_zero": true
+          },
+          "first_opposed_splitter_normal_time_s": null,
+          "capsule_geometry_at_4_s": {
+            "radius_m": 0.0034449745120997558,
+            "half_segment_m": 0.0001,
+            "full_segment_length_m": 0.0002,
+            "center_m": [
+              0.3798020323800606,
+              -0.06585498341145876,
+              0.5062018911488873
+            ],
+            "axis_world": [
+              -0.916097292054104,
+              0.32550173022282347,
+              0.23412492720350436
+            ],
+            "endpoints_m": [
+              [
+                0.379893642109266,
+                -0.06588753358448105,
+                0.5061784786561669
+              ],
+              [
+                0.3797104226508552,
+                -0.06582243323843648,
+                0.5062253036416076
+              ]
+            ],
+            "endpoint_normal_offsets_m": [
+              0.005442505971282544,
+              0.005442546061899076
+            ],
+            "old_splitter_face_offsets_m": [
+              0.002,
+              -0.002
+            ]
+          }
+        }
+      },
+      "mg_vs_total_endpoint_normal_force": {
+        "mass_kg_by_uid": {
+          "319": 0.0007781154584788002
+        },
+        "mg_n_by_uid": {
+          "319": 0.00763331264767703
+        },
+        "total_normal_force_n_at_4_s": 0.007394098310925002,
+        "total_endpoint_normal_force_n_at_5_5_s": 0.00739602220012553,
+        "contact_groups_at_5_5_s": [
+          {
+            "surface": "splitter",
+            "normal": [
+              0.247403959254523,
+              0.0,
+              0.968912421710645
+            ],
+            "samples": 4,
+            "normal_force_total_n": 0.00739602220012553,
+            "normal_force_max_n": 0.0024896740934646205
+          }
+        ]
+      },
+      "proposed_splitter_box": {
+        "center_m": [
+          0.4790103841629819,
+          0.0,
+          0.4711243503131574
+        ],
+        "half_size_m": [
+          0.14,
+          0.27,
+          0.006
+        ],
+        "quaternion_wxyz": [
+          0.992197667229329,
+          0.0,
+          0.12467473338522769,
+          0.0
+        ],
+        "center_shift_m": -0.004,
+        "preserves_top_rectangle_and_slope": true
+      }
+    },
+    "31": {
+      "seed": 31,
+      "splitter_normal": [
+        0.24740395925452294,
+        0.0,
+        0.9689124217106447
+      ],
+      "targets": {
+        "353": {
+          "sample_and_jet_hit_comparison": {
+            "exact_fields_equal": {
+              "class": true,
+              "mass_kg": true,
+              "axes_m": true,
+              "spawn_time_s": true
+            },
+            "exact_sample_equal": true,
+            "jet_hits_equal": true,
+            "overdue": {
+              "class": "good",
+              "mass_kg": 0.0002461755529119575,
+              "axes_m": [
+                0.005568985920368835,
+                0.003976993616821444,
+                0.0023074242817425037
+              ],
+              "spawn_time_s": 0.7070000000000005,
+              "jet_hits": 3
+            },
+            "candidate": {
+              "class": "good",
+              "mass_kg": 0.0002461755529119575,
+              "axes_m": [
+                0.005568985920368835,
+                0.003976993616821444,
+                0.0023074242817425037
+              ],
+              "spawn_time_s": 0.7070000000000005,
+              "jet_hits": 3
+            }
+          },
+          "at_4_s": {
+            "time_s": 3.9999999999996705,
+            "position_m": [
+              0.5332068252451166,
+              -0.1400973733932586,
+              0.4658546683171667
+            ],
+            "speed_m_s": 0.0030653121830482564,
+            "applied_force_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "contacts": [
+              {
+                "surface": "splitter",
+                "normal": [
+                  -0.24740395925452296,
+                  0.0,
+                  -0.9689124217106448
+                ],
+                "samples": 1,
+                "normal_force_total_n": 0.0011980689652796685,
+                "normal_force_max_n": 0.0011980689652796685
+              },
+              {
+                "surface": "splitter",
+                "normal": [
+                  -0.247403959254523,
+                  0.0,
+                  -0.968912421710645
+                ],
+                "samples": 1,
+                "normal_force_total_n": 0.001141658992534899,
+                "normal_force_max_n": 0.001141658992534899
+              }
+            ],
+            "contact_count": 2,
+            "retirement": null,
+            "engine_record": {
+              "decisions": [
+                {
+                  "track_id": 346,
+                  "sim_time_s": 1.0000000000000007,
+                  "predicted_class": "stick",
+                  "reject": true,
+                  "scheduled": true,
+                  "late": false,
+                  "association": "current_component",
+                  "association_approximate": true,
+                  "object_ids": [
+                    343,
+                    353
+                  ]
+                }
+              ],
+              "associated_rejection_tracks": [
+                346
+              ],
+              "activated_rejection_tracks": [
+                346
+              ],
+              "own_pulse_hit": true,
+              "jet_hits": 3,
+              "outcome": null,
+              "resolved_time_s": null
+            }
+          },
+          "at_5_5_s": {
+            "time_s": 5.500000000000171,
+            "position_m": [
+              0.5376292677881734,
+              -0.1395454534709141,
+              0.4647253984843844
+            ],
+            "speed_m_s": 0.0030666380623478526,
+            "applied_force_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "contacts": [
+              {
+                "surface": "splitter",
+                "normal": [
+                  -0.247403959254523,
+                  0.0,
+                  -0.968912421710645
+                ],
+                "samples": 2,
+                "normal_force_total_n": 0.0023396890577559682,
+                "normal_force_max_n": 0.001198174989181352
+              }
+            ],
+            "contact_count": 2,
+            "retirement": null,
+            "engine_record": {
+              "decisions": [
+                {
+                  "track_id": 346,
+                  "sim_time_s": 1.0000000000000007,
+                  "predicted_class": "stick",
+                  "reject": true,
+                  "scheduled": true,
+                  "late": false,
+                  "association": "current_component",
+                  "association_approximate": true,
+                  "object_ids": [
+                    343,
+                    353
+                  ]
+                }
+              ],
+              "associated_rejection_tracks": [
+                346
+              ],
+              "activated_rejection_tracks": [
+                346
+              ],
+              "own_pulse_hit": true,
+              "jet_hits": 3,
+              "outcome": null,
+              "resolved_time_s": null
+            }
+          },
+          "displacement_m": [
+            0.004422442543056793,
+            0.0005519199223444904,
+            -0.0011292698327823314
+          ],
+          "displacement_norm_m": 0.0045975932837248245,
+          "final_100": {
+            "sample_count": 100,
+            "splitter_contact_samples": 100,
+            "splitter_contact_fraction": 1.0,
+            "all_applied_force_zero": true
+          },
+          "first_opposed_splitter_normal_time_s": null,
+          "capsule_geometry_at_4_s": {
+            "radius_m": 0.0023074242817425037,
+            "half_segment_m": 0.0032615616386263316,
+            "full_segment_length_m": 0.006523123277252663,
+            "center_m": [
+              0.5332038764401951,
+              -0.14009774149076,
+              0.4658554201100528
+            ],
+            "axis_world": [
+              -0.1294202982154511,
+              0.9910378736478138,
+              0.033082107405781824
+            ],
+            "endpoints_m": [
+              [
+                0.5336259887201141,
+                -0.14333007260187552,
+                0.4657475207776132
+              ],
+              [
+                0.532781764160276,
+                -0.1368654103796445,
+                0.4659633194424924
+              ]
+            ],
+            "endpoint_normal_offsets_m": [
+              0.004302439878104454,
+              0.00430266538649062
+            ],
+            "old_splitter_face_offsets_m": [
+              0.002,
+              -0.002
+            ]
+          }
+        },
+        "841": {
+          "sample_and_jet_hit_comparison": {
+            "exact_fields_equal": {
+              "class": true,
+              "mass_kg": true,
+              "axes_m": true,
+              "spawn_time_s": true
+            },
+            "exact_sample_equal": true,
+            "jet_hits_equal": true,
+            "overdue": {
+              "class": "good",
+              "mass_kg": 0.00022247230208160445,
+              "axes_m": [
+                0.005360084330866925,
+                0.003789568591778637,
+                0.0022736735223089378
+              ],
+              "spawn_time_s": 1.6829999999999254,
+              "jet_hits": 3
+            },
+            "candidate": {
+              "class": "good",
+              "mass_kg": 0.00022247230208160445,
+              "axes_m": [
+                0.005360084330866925,
+                0.003789568591778637,
+                0.0022736735223089378
+              ],
+              "spawn_time_s": 1.6829999999999254,
+              "jet_hits": 3
+            }
+          },
+          "at_4_s": {
+            "time_s": 3.9999999999996705,
+            "position_m": [
+              0.35488973139872393,
+              0.23118279465286062,
+              0.5069449726035806
+            ],
+            "speed_m_s": 5.6594263148919776e-05,
+            "applied_force_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "contacts": [
+              {
+                "surface": "splitter",
+                "normal": [
+                  -0.247403959254523,
+                  0.0,
+                  -0.968912421710645
+                ],
+                "samples": 1,
+                "normal_force_total_n": 1.3991188953700755,
+                "normal_force_max_n": 1.3991188953700755
+              },
+              {
+                "surface": "splitter",
+                "normal": [
+                  0.247403959254523,
+                  0.0,
+                  0.968912421710645
+                ],
+                "samples": 1,
+                "normal_force_total_n": 1.3970052259516514,
+                "normal_force_max_n": 1.3970052259516514
+              }
+            ],
+            "contact_count": 2,
+            "retirement": null,
+            "engine_record": {
+              "decisions": [
+                {
+                  "track_id": 834,
+                  "sim_time_s": 1.9799999999998927,
+                  "predicted_class": "stick",
+                  "reject": true,
+                  "scheduled": true,
+                  "late": false,
+                  "association": "current_component",
+                  "association_approximate": true,
+                  "object_ids": [
+                    841,
+                    843
+                  ]
+                }
+              ],
+              "associated_rejection_tracks": [
+                834
+              ],
+              "activated_rejection_tracks": [
+                834
+              ],
+              "own_pulse_hit": true,
+              "jet_hits": 3,
+              "outcome": null,
+              "resolved_time_s": null
+            }
+          },
+          "at_5_5_s": {
+            "time_s": 5.500000000000171,
+            "position_m": [
+              0.35497640954434234,
+              0.23118272123815695,
+              0.506922820027401
+            ],
+            "speed_m_s": 6.319212157542367e-05,
+            "applied_force_n": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "contacts": [
+              {
+                "surface": "splitter",
+                "normal": [
+                  -0.247403959254523,
+                  0.0,
+                  -0.968912421710645
+                ],
+                "samples": 1,
+                "normal_force_total_n": 1.3991195362233777,
+                "normal_force_max_n": 1.3991195362233777
+              },
+              {
+                "surface": "splitter",
+                "normal": [
+                  0.247403959254523,
+                  0.0,
+                  0.968912421710645
+                ],
+                "samples": 1,
+                "normal_force_total_n": 1.3970045860541025,
+                "normal_force_max_n": 1.3970045860541025
+              }
+            ],
+            "contact_count": 2,
+            "retirement": null,
+            "engine_record": {
+              "decisions": [
+                {
+                  "track_id": 834,
+                  "sim_time_s": 1.9799999999998927,
+                  "predicted_class": "stick",
+                  "reject": true,
+                  "scheduled": true,
+                  "late": false,
+                  "association": "current_component",
+                  "association_approximate": true,
+                  "object_ids": [
+                    841,
+                    843
+                  ]
+                }
+              ],
+              "associated_rejection_tracks": [
+                834
+              ],
+              "activated_rejection_tracks": [
+                834
+              ],
+              "own_pulse_hit": true,
+              "jet_hits": 3,
+              "outcome": null,
+              "resolved_time_s": null
+            }
+          },
+          "displacement_m": [
+            8.667814561841292e-05,
+            -7.3414703677388e-08,
+            -2.2152576179657046e-05
+          ],
+          "displacement_norm_m": 8.946419925848003e-05,
+          "final_100": {
+            "sample_count": 100,
+            "splitter_contact_samples": 100,
+            "splitter_contact_fraction": 1.0,
+            "all_applied_force_zero": true
+          },
+          "first_opposed_splitter_normal_time_s": 2.1389999999998754,
+          "capsule_geometry_at_4_s": {
+            "radius_m": 0.0022736735223089378,
+            "half_segment_m": 0.0030864108085579874,
+            "full_segment_length_m": 0.006172821617115975,
+            "center_m": [
+              0.35488967512676695,
+              0.2311827976032942,
+              0.5069449778640389
+            ],
+            "axis_world": [
+              -0.2473992382608972,
+              3.0250308223622735e-06,
+              -0.9689136820809886
+            ],
+            "endpoints_m": [
+              [
+                0.3556532508097644,
+                0.23118278826680635,
+                0.5099354435249734
+              ],
+              [
+                0.3541260994437695,
+                0.23118280693978202,
+                0.5039545122031044
+              ]
+            ],
+            "endpoint_normal_offsets_m": [
+              0.003085507119224073,
+              -0.003087314826261213
+            ],
+            "old_splitter_face_offsets_m": [
+              0.002,
+              -0.002
+            ],
+            "projection_requested": true
+          }
+        }
+      },
+      "mg_vs_total_endpoint_normal_force": {
+        "mass_kg_by_uid": {
+          "353": 0.0002461755529119575,
+          "841": 0.00022247230208160445
+        },
+        "mg_n_by_uid": {
+          "353": 0.002414982174066303,
+          "841": 0.0021824532834205396
+        },
+        "total_normal_force_n_at_4_s": 2.7984638492795417,
+        "total_endpoint_normal_force_n_at_5_5_s": 2.7984638113352363,
+        "contact_groups_at_5_5_s": [
+          {
+            "surface": "splitter",
+            "normal": [
+              -0.247403959254523,
+              0.0,
+              -0.968912421710645
+            ],
+            "samples": 3,
+            "normal_force_total_n": 1.4014592252811338,
+            "normal_force_max_n": 1.3991195362233777
+          },
+          {
+            "surface": "splitter",
+            "normal": [
+              0.247403959254523,
+              0.0,
+              0.968912421710645
+            ],
+            "samples": 1,
+            "normal_force_total_n": 1.3970045860541025,
+            "normal_force_max_n": 1.3970045860541025
+          }
+        ]
+      },
+      "proposed_splitter_box": {
+        "center_m": [
+          0.4790103841629819,
+          0.0,
+          0.4711243503131574
+        ],
+        "half_size_m": [
+          0.14,
+          0.27,
+          0.006
+        ],
+        "quaternion_wxyz": [
+          0.992197667229329,
+          0.0,
+          0.12467473338522769,
+          0.0
+        ],
+        "center_shift_m": -0.004,
+        "preserves_top_rectangle_and_slope": true
+      }
+    }
+  }
+}

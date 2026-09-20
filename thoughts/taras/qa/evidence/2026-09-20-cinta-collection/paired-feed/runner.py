@@ -25,7 +25,19 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def run(args, state):
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--repo', type=Path, required=True)
+    parser.add_argument('--model', type=Path, required=True)
+    parser.add_argument('--preset', type=Path, required=True)
+    parser.add_argument('--seed', type=int, choices=(11, 17, 23, 31), required=True)
+    parser.add_argument('--seconds', type=float, default=4.0)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists():
+        raise FileExistsError(args.output)
+    if args.seconds != 4.0:
+        parser.error('This validation fixes feed duration at four simulated seconds.')
     repo = args.repo.resolve()
     coffee = repo / 'sim/coffee_sorter'
     sys.path.insert(0, str(coffee))
@@ -36,17 +48,12 @@ def run(args, state):
     model = args.model.resolve()
     preset_path = args.preset.resolve()
     preset = json.loads(preset_path.read_text())
-    if sha(model) != MODEL_HASH:
-        raise ValueError('The model hash differs from the frozen model.')
-    if preset['jet_force_n'] != .06 or preset['policy']['lead_s'] != .0015:
-        raise ValueError('The air force or lead differs from the frozen preset.')
-    if preset['layout']['timestep'] != .001 or preset['requested_rate'] != 500.0:
-        raise ValueError('The timestep or feed rate differs from the frozen preset.')
-    if tuple(preset['layout'][k] for k in ('n_ellipsoid', 'n_half', 'n_box', 'n_capsule')) != (400, 48, 20, 20):
-        raise ValueError('The pool differs from the frozen pool.')
+    assert sha(model) == MODEL_HASH
+    assert preset['jet_force_n'] == .06 and preset['policy']['lead_s'] == .0015
+    assert preset['layout']['timestep'] == .001 and preset['requested_rate'] == 500.0
+    assert sum(preset['layout'][k] for k in ('n_ellipsoid', 'n_half', 'n_box', 'n_capsule')) == 488
     preset['seed'] = args.seed
     rows, decisions, pool_peak = {}, [], {}
-    target_decisions = {str(uid): [] for uid in {17: (319,), 31: (353, 841)}.get(args.seed, ())}
     started = time.perf_counter()
     with LOCK.open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
@@ -54,14 +61,10 @@ def run(args, state):
         with tempfile.TemporaryDirectory() as directory:
             runtime = Path(directory) / 'feed.json'
             runtime.write_text(json.dumps(preset))
-            state['stage'] = 'engine_construction'
             engine = Engine(runtime)
             try:
-                state['stage'] = 'engine_identity'
-                if engine.model_path.resolve() != model:
-                    raise ValueError('The Engine loaded a different model path.')
-                if engine.model.classes != GREEN_ARABICA.names:
-                    raise ValueError('The Engine loaded a different class catalog.')
+                assert engine.model_path.resolve() == model
+                assert engine.model.classes == GREEN_ARABICA.names
                 original_register = engine._register_bean
                 original_evaluate = engine._evaluate_frame
                 original_park = engine.sim._park
@@ -79,61 +82,21 @@ def run(args, state):
                     bean = engine.sim.bean_of[body]
                     if bean.uid in rows:
                         row = rows[bean.uid]
-                        record = engine._object_records.get(bean.uid)
                         row.update(outcome=bean.outcome, resolved_s=bean.resolved_t,
                                    retired_s=float(engine.sim.data.time), jet_hits=int(bean.jet_hits),
                                    last_pos=bean.last_pos)
-                        if record is not None:
-                            row.update(
-                                own_pulse_hit=bool(record['own_pulse_hit']),
-                                associated_rejection_tracks=sorted(record['associated_rejection_tracks']),
-                                activated_rejection_tracks=sorted(record['activated_rejection_tracks']),
-                            )
                     original_park(body)
 
                 def evaluate(blobs, full, tracks, captured):
-                    pending = list(engine.controller.decisions)
-                    result = original_evaluate(blobs, full, tracks, captured)
-                    for decision in pending:
-                        basic = {'track': int(decision.tid), 'class': decision.cls,
-                                 'reject': bool(decision.reject), 'scheduled': bool(decision.scheduled),
-                                 'late': bool(decision.late), 'pulse_s': float(decision.pulse),
-                                 'target_uids': [int(uid) for uid in decision.target_uids]}
-                        decisions.append(basic)
-                        for uid in decision.target_uids:
-                            if str(uid) not in target_decisions:
-                                continue
-                            reject_probability = float(decision.probs[engine.controller.reject_mask].sum())
-                            target_decisions[str(uid)].append({
-                                **basic,
-                                'probabilities': {name: float(probability)
-                                                  for name, probability in zip(engine.model.classes, decision.probs)},
-                                'anomaly_score': float(decision.anomaly),
-                                'anomaly_threshold': float(engine.model.anomaly_thresh),
-                                'anomaly_enabled': bool(engine.policy.anomaly),
-                                'anomaly_triggered': bool(engine.policy.anomaly and decision.anomaly > engine.model.anomaly_thresh),
-                                'predicted_class': decision.cls,
-                                'combined_reject': bool(decision.reject),
-                                'reject_probability': reject_probability,
-                                'reject_threshold': float(engine.policy.threshold),
-                                'class_threshold_reject': reject_probability >= engine.policy.threshold,
-                                'decision_time_s': float(decision.t_decided),
-                                'available_time_s': float(decision.t_available),
-                                'fire_time_s': float(decision.t_fire),
-                                'nozzles': [int(nozzle) for nozzle in decision.nozzles],
-                                'fires': [
-                                    {'nozzle': int(fire.nozzle), 't_on': float(fire.t_on),
-                                     't_off': float(fire.t_off), 'force_n': float(fire.force),
-                                     'track': None if fire.uid is None else int(fire.uid)}
-                                    for fire in engine.sim.fires if fire.uid == decision.tid
-                                ],
-                            })
-                    return result
+                    for decision in list(engine.controller.decisions):
+                        decisions.append({'track': int(decision.tid), 'class': decision.cls,
+                                          'reject': bool(decision.reject), 'scheduled': bool(decision.scheduled),
+                                          'late': bool(decision.late), 'pulse_s': float(decision.pulse)})
+                    return original_evaluate(blobs, full, tracks, captured)
 
                 engine._register_bean = register
                 engine._evaluate_frame = evaluate
                 engine.sim._park = park
-                state['stage'] = 'feed_execution'
                 run_started, cpu_started = time.perf_counter(), time.process_time()
                 load_start = os.getloadavg()
                 while engine.sim.data.time < args.seconds - engine.sim.dt / 2:
@@ -141,7 +104,6 @@ def run(args, state):
                     for shape, slots in engine.sim.pools.items():
                         active = len(slots) - len(engine.sim.free[shape])
                         pool_peak[shape] = max(pool_peak.get(shape, 0), active)
-                state['stage'] = 'result_collection'
                 run_wall = time.perf_counter() - run_started
                 run_cpu = time.process_time() - cpu_started
                 now = float(engine.sim.data.time)
@@ -187,59 +149,15 @@ def run(args, state):
                                'required_keep': len(keep_rows),
                                'keep_lost': sum(r['outcome'] in ('reject', 'spilled') for r in keep_rows)},
                     'rolling_scores': engine.rolling_scores(), 'classes': class_metrics,
-                    'decisions': decisions, 'target_decisions': target_decisions,
-                    'objects': list(rows.values()),
+                    'decisions': decisions, 'objects': list(rows.values()),
                     'valves': {'commanded': engine.sim.n_fired, 'activated': engine.sim.n_activated},
                 }
-            except Exception as error:
-                state['errors'].append({'stage': state['stage'], 'type': type(error).__name__, 'message': str(error)})
-                raise
             finally:
-                try:
-                    engine.close()
-                except Exception as error:
-                    state['errors'].append({'stage': 'engine_close', 'type': type(error).__name__, 'message': str(error)})
-                    raise
+                engine.close()
     result['lock_released'] = True
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    state['stage'] = 'result_write'
-    with args.output.open('x') as stream:
-        stream.write(json.dumps(result, indent=2, allow_nan=False)+'\n')
+    args.output.write_text(json.dumps(result, indent=2, allow_nan=False)+'\n')
     print(json.dumps({key: result[key] for key in ('seed', 'execution', 'capacity', 'timing', 'cohort')}))
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--repo', type=Path, required=True)
-    parser.add_argument('--model', type=Path, required=True)
-    parser.add_argument('--preset', type=Path, required=True)
-    parser.add_argument('--seed', type=int, choices=(11, 17, 23, 31), required=True)
-    parser.add_argument('--seconds', type=float, default=4.0)
-    parser.add_argument('--output', type=Path, required=True)
-    args = parser.parse_args()
-    if args.output.exists():
-        raise FileExistsError(args.output)
-    if args.seconds != 4.0:
-        parser.error('This validation fixes feed duration at four simulated seconds.')
-    state = {'stage': 'setup', 'errors': []}
-    try:
-        run(args, state)
-    except Exception as error:
-        if not state['errors']:
-            state['errors'].append({'stage': state['stage'], 'type': type(error).__name__, 'message': str(error)})
-        failure = {'seed': args.seed, 'errors': state['errors'], 'runner_sha256': sha(__file__)}
-        for name, path in (('model_sha256', args.model), ('preset_sha256', args.preset)):
-            if path.is_file():
-                failure[name] = sha(path)
-        coffee = args.repo / 'sim/coffee_sorter'
-        failure['source_sha256'] = {name: sha(coffee/name) for name in (
-            'sim.py', 'engine.py', 'rolling_scores.py', 'controller.py', 'scene.py', 'profiles.py'
-        ) if (coffee/name).is_file()}
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        if not args.output.exists():
-            with args.output.open('x') as stream:
-                stream.write(json.dumps(failure, indent=2, allow_nan=False)+'\n')
-        raise
 
 
 if __name__ == '__main__':

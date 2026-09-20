@@ -1,0 +1,228 @@
+{
+  "method": "15-axis box separation at stored poses. Negative gaps indicate overlap. No modified physics ran.",
+  "runner_sha256": "c315c3507dde8697b4e98c56db39b18d815434e17573ea65f3e6afbb9f8c3e32",
+  "old_center_m": [
+    0.48,
+    0.0,
+    0.475
+  ],
+  "proposed_center_m": [
+    0.48098961583701805,
+    0.0,
+    0.47887564968684254
+  ],
+  "proposed_half_size_m": [
+    0.14,
+    0.27,
+    0.006
+  ],
+  "preserved_face": "bottom",
+  "route": "keep",
+  "preserved_face_center_m": [
+    0.4795051920814909,
+    0.0,
+    0.47306217515657867
+  ],
+  "reject_clearance": [
+    {
+      "source": "keep-seed-42-reuse-0.json.gz",
+      "uncompressed_sha256": "ce825e4f28998e4a143f867e207159f750579bc6941d1cbd052d9cfcb9471fac",
+      "seed": 42,
+      "reuse": 0,
+      "minimum_old_separating_gap_m": -0.000770450514269052,
+      "minimum_proposed_separating_gap_m": -0.00877045051426903,
+      "new_overlap_steps": 45,
+      "first_new_overlap": {
+        "time_s": 0.4830000000000004,
+        "position_m": [
+          0.433538788299381,
+          -0.060837516326477666,
+          0.500796248897426
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 0.5290000000000004,
+        "position_m": [
+          0.5505852392910875,
+          -0.060666418868501014,
+          0.4715043070434287
+        ]
+      }
+    },
+    {
+      "source": "keep-seed-42-reuse-1.json.gz",
+      "uncompressed_sha256": "f57a5a2f24ab1f7025cfcafbef3aee7f1603294ece022285963c6fea81168461",
+      "seed": 42,
+      "reuse": 1,
+      "minimum_old_separating_gap_m": -0.0008451020264004811,
+      "minimum_proposed_separating_gap_m": -0.00884510202640046,
+      "new_overlap_steps": 28,
+      "first_new_overlap": {
+        "time_s": 1.0030000000000003,
+        "position_m": [
+          0.4393799778068841,
+          -0.014175597617824538,
+          0.4995516356839663
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 1.032999999999997,
+        "position_m": [
+          0.5169458531749545,
+          -0.014086785755561394,
+          0.48010981621831667
+        ]
+      }
+    },
+    {
+      "source": "keep-seed-7-reuse-0.json.gz",
+      "uncompressed_sha256": "cc77b9be03dbbfdb79246b1d6b303030690d9f972c67151f13ea299ae2660cf7",
+      "seed": 7,
+      "reuse": 0,
+      "minimum_old_separating_gap_m": -0.0006712043230711505,
+      "minimum_proposed_separating_gap_m": -0.008671204323071129,
+      "new_overlap_steps": 29,
+      "first_new_overlap": {
+        "time_s": 0.4840000000000004,
+        "position_m": [
+          0.4361634879369629,
+          -0.09279769221089358,
+          0.5004709826745611
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 0.5160000000000003,
+        "position_m": [
+          0.5183251308806872,
+          -0.09286901454743075,
+          0.48080161957201994
+        ]
+      }
+    },
+    {
+      "source": "keep-seed-7-reuse-1.json.gz",
+      "uncompressed_sha256": "ee73a58e98b5c84f015c9e89cf7aceaa1aade88d44d0518379ffffdece31428e",
+      "seed": 7,
+      "reuse": 1,
+      "minimum_old_separating_gap_m": -0.0006096870135576292,
+      "minimum_proposed_separating_gap_m": -0.008609687013557608,
+      "new_overlap_steps": 31,
+      "first_new_overlap": {
+        "time_s": 0.9950000000000008,
+        "position_m": [
+          0.44009231982063596,
+          -0.016201724980250257,
+          0.4996015224304578
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 1.0289999999999975,
+        "position_m": [
+          0.5277304837038179,
+          -0.016256296980946994,
+          0.4774862564144915
+        ]
+      }
+    },
+    {
+      "source": "keep-seed-8-reuse-0.json.gz",
+      "uncompressed_sha256": "ee28d89bd18bfcdd7be3ac699a7166ec42aa873233b216bf5203400d9208d6ea",
+      "seed": 8,
+      "reuse": 0,
+      "minimum_old_separating_gap_m": -0.0007453634481743082,
+      "minimum_proposed_separating_gap_m": -0.008745363448174287,
+      "new_overlap_steps": 38,
+      "first_new_overlap": {
+        "time_s": 0.4850000000000004,
+        "position_m": [
+          0.4373684283633349,
+          -0.11920807867890933,
+          0.4990646208609978
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 0.5250000000000004,
+        "position_m": [
+          0.5391337866173215,
+          -0.11907650773864882,
+          0.4747186659391059
+        ]
+      }
+    },
+    {
+      "source": "keep-seed-8-reuse-1.json.gz",
+      "uncompressed_sha256": "faaf2993417aa6960c5249e74dcd1d5ec47a0f18e688f3e107f843f3535b506f",
+      "seed": 8,
+      "reuse": 1,
+      "minimum_old_separating_gap_m": -0.0005850650668692676,
+      "minimum_proposed_separating_gap_m": -0.008585065066869246,
+      "new_overlap_steps": 32,
+      "first_new_overlap": {
+        "time_s": 1.0050000000000001,
+        "position_m": [
+          0.43878727788883964,
+          -0.057407671733651765,
+          0.499543852155836
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 1.0389999999999964,
+        "position_m": [
+          0.5263174539310279,
+          -0.05754236694206926,
+          0.47771895560205085
+        ]
+      }
+    },
+    {
+      "source": "keep-seed-9-reuse-0.json.gz",
+      "uncompressed_sha256": "b25a958984b755b1321eeda122578036643aac0d3504fabcebd0567b9f0ca3c3",
+      "seed": 9,
+      "reuse": 0,
+      "minimum_old_separating_gap_m": -0.0004746797233872394,
+      "minimum_proposed_separating_gap_m": -0.008474679723387217,
+      "new_overlap_steps": 24,
+      "first_new_overlap": {
+        "time_s": 0.4830000000000004,
+        "position_m": [
+          0.43584585676338145,
+          -0.006703771455900015,
+          0.5005550770456638
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 0.5110000000000003,
+        "position_m": [
+          0.5084182679002784,
+          -0.0066308455803728485,
+          0.48227959544703175
+        ]
+      }
+    },
+    {
+      "source": "keep-seed-9-reuse-1.json.gz",
+      "uncompressed_sha256": "4cd538e9261268dbcfb1d3fac0d193b17f70f293a31b873ffba2cafae5129340",
+      "seed": 9,
+      "reuse": 1,
+      "minimum_old_separating_gap_m": -0.00045031789177125666,
+      "minimum_proposed_separating_gap_m": -0.008450317891771236,
+      "new_overlap_steps": 35,
+      "first_new_overlap": {
+        "time_s": 0.9800000000000008,
+        "position_m": [
+          0.43084414944589833,
+          0.10384777122417295,
+          0.5008088297495772
+        ]
+      },
+      "last_new_overlap": {
+        "time_s": 1.0169999999999988,
+        "position_m": [
+          0.5259140029511007,
+          0.10392407840848529,
+          0.4771404030246444
+        ]
+      }
+    }
+  ]
+}
