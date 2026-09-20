@@ -105,6 +105,7 @@ def service(continuous=True):
     value.continuous = continuous
     value.state = {'status': 'running' if continuous else 'ready', 'session_id': str(uuid.uuid4())}
     value.restarting = False
+    value.resetting = False
     value.requests = {}
     value.commands = RecordingQueue()
     value.command_epoch_seconds = COMMAND_EPOCH_SECONDS
@@ -2279,6 +2280,149 @@ class ActivatorTest(unittest.IsolatedAsyncioTestCase):
                               object_catalog.load_catalog(
                                   self.root / 'active' / 'bundles' / activated
                                   / 'catalog')['active_type_ids']])
+
+
+class ResetDefaultsTest(unittest.IsolatedAsyncioTestCase):
+    """POST /reset-defaults on a real seeded root. The deployment helper is a fake module.
+
+    The harness is the activator one: a real root, the real worker command logic, and a
+    fake `_swap_worker`. No engine process, no server, and no port.
+    """
+
+    BACKUP = '20260920T000000Z-0badc0de'
+    write_preset = ActivatorTest.write_preset
+    build_service = ActivatorTest.build_service
+    candidate = ActivatorTest.candidate
+    fake_swap = ActivatorTest.fake_swap
+    pointer = ActivatorTest.pointer
+
+    def setUp(self):
+        ActivatorTest.setUp(self)
+        self.baseline = self.pointer()
+        marker = self.root / 'active' / object_catalog.SEED_MARKER
+        marker.write_text(json.dumps({'bundle_sha256': self.baseline}))
+        self.calls = []
+        self.enterContext(patch.object(sys, 'path', list(sys.path)))
+        self.addCleanup(lambda: self.service._close_item_jobs())
+
+    def lock_is_free(self):
+        import fcntl
+        with (self.root / 'history' / 'writer.lock').open('a') as handle:
+            try:
+                fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError:
+                return False
+            fcntl.flock(handle, fcntl.LOCK_UN)
+            return True
+
+    def helper(self, error=None):
+        """The deployed helper contract: it needs the writer lock, then moves the pointer."""
+        def reset_state(root, *, apply):
+            self.calls.append({'root': Path(root), 'apply': apply,
+                               'store': self.service.item_jobs, 'lock_free': self.lock_is_free()})
+            if error is not None:
+                raise error
+            object_catalog.write_active_pointer(Path(root) / 'active', self.baseline)
+            return {'mode': 'apply', 'baseline_bundle_sha256': self.baseline,
+                    'backup': self.BACKUP}
+
+        module = types.ModuleType('reset_live_state')
+        module.reset_state = reset_state
+        return patch.dict(sys.modules, {'reset_live_state': module})
+
+    async def activated(self):
+        """One generated type is active, and the queue owns its store again."""
+        with self.fake_swap():
+            self.assertEqual('active', await self.service._activate('job-1', self.candidate()))
+        self.assertNotEqual(self.baseline, self.pointer())
+        self.service._open_item_jobs()
+        return self.service.item_jobs
+
+    async def reset(self, **request):
+        response = await self.service.reset_defaults(FakeRequest({}, **request))
+        return response.status, json.loads(response.text)
+
+    async def test_a_reset_restores_the_baseline_and_an_exact_retry_applies_nothing(self):
+        store = await self.activated()
+
+        with self.fake_swap(), self.helper():
+            status, body = await self.reset()
+            again = await self.reset()
+
+        self.assertEqual((200, True), (status, body['ok']))
+        self.assertEqual(self.BACKUP, body['result']['backup'])
+        self.assertEqual(self.service.state['session_id'], body['result']['session_id'])
+        # The helper ran once, with the store closed and the writer lock released.
+        self.assertEqual([{'root': self.root, 'apply': True, 'store': None, 'lock_free': True}],
+                         self.calls)
+        self.assertEqual(self.baseline, self.pointer())
+        self.assertEqual(self.baseline, self.service.active_bundle.name)
+        self.assertEqual(str(self.service.active_bundle / 'catalog'),
+                         os.environ[object_catalog.CATALOG_ROOT_ENV])
+        self.assertEqual(self.packaged['active_type_ids'], self.service.active_type_ids)
+        # One swap for the activation and one for the reset. The retry adds none.
+        self.assertEqual(2, len(self.swaps))
+        self.assertEqual((200, {'ok': True, 'result': {
+            'mode': 'noop', 'baseline_bundle_sha256': self.baseline, 'backup': None}}), again)
+        # A new store owns the lock, and admissions are open again.
+        self.assertIsNot(store, self.service.item_jobs)
+        self.assertFalse(self.lock_is_free())
+        self.assertEqual((False, None), (self.service.resetting, self.service.activating))
+
+    async def test_a_reset_is_refused_without_an_origin_or_beside_other_work(self):
+        self.assertEqual(403, (await self.reset(origin=None))[0])
+        for name, value in (('resetting', True), ('restarting', True), ('activating', 'job-1')):
+            with self.subTest(busy=name), patch.object(self.service, name, value), self.helper():
+                self.assertEqual((409, {'ok': False, 'error': 'reset_in_progress'}),
+                                 await self.reset())
+        self.assertEqual([], self.calls)
+
+    async def test_a_helper_failure_keeps_the_session_and_reopens_the_queue(self):
+        await self.activated()
+        generated, session = self.pointer(), self.service.state['session_id']
+
+        with self.fake_swap(), self.helper(RuntimeError('the layout is unknown')):
+            status, body = await self.reset()
+
+        self.assertEqual((500, {'ok': False, 'error': 'reset_failed', 'backup': None}),
+                         (status, body))
+        self.assertEqual(generated, self.pointer())
+        self.assertEqual(generated, self.service.active_bundle.name)
+        self.assertEqual(session, self.service.state['session_id'])
+        self.assertEqual(1, len(self.swaps))
+        self.assertIsNotNone(self.service.item_jobs)
+        self.assertFalse(self.service.resetting)
+
+    async def test_an_unconfirmed_runner_stop_aborts_before_the_helper(self):
+        store = await self.activated()
+
+        with self.fake_swap(), self.helper(), \
+                patch.object(self.service.item_runner, 'stop', return_value=False):
+            status, body = await self.reset()
+
+        self.assertEqual((500, 'reset_failed'), (status, body['error']))
+        self.assertEqual([], self.calls)
+        self.assertIs(store, self.service.item_jobs)
+        self.assertFalse(self.lock_is_free())
+        self.assertNotEqual(self.baseline, self.pointer())
+
+    async def test_a_failed_start_after_the_reset_reports_the_preserved_backup(self):
+        await self.activated()
+
+        with self.fake_swap(failing_swaps=(2,)), self.helper():
+            status, body = await self.reset()
+
+        self.assertEqual((500, {'ok': False, 'error': 'reset_failed', 'backup': self.BACKUP}),
+                         (status, body))
+        self.assertEqual(self.baseline, self.pointer())
+        self.assertIsNotNone(self.service.item_jobs)
+
+    async def test_no_job_is_admitted_while_a_reset_runs(self):
+        value = item_service(self)
+        value.resetting = True
+        response = await value.submit_item_job(item_request())
+        self.assertEqual('not_available', json.loads(response.text)['error_code'])
+        self.assertEqual([], value.item_jobs.summaries())
 
 
 class ActiveBundleStartupTest(unittest.TestCase):

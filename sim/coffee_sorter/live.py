@@ -33,6 +33,8 @@ import item_jobs
 import object_catalog
 
 HERE = Path(__file__).resolve().parent
+# The reset helper ships with the deployment, outside this package.
+RESET_HELPER_ROOT = HERE.parents[1] / 'deploy' / 'hack-growth.dev'
 MAX_COMMANDS = 64
 MAX_CLIENTS = 4
 MAX_PENDING_COMMANDS = 16
@@ -672,6 +674,8 @@ class LiveService:
         self.loop = None
         # One activation at a time. The loop sets this before its first await.
         self.activating = None
+        # One reset to defaults at a time. While it runs, no new item job is admitted.
+        self.resetting = False
         self.preset = Path(preset)
         self.preset_config = load_preset(self.preset)
         self.continuous = self.preset_config.get('mode') == 'continuous'
@@ -881,6 +885,8 @@ class LiveService:
         body = await self._item_body(request)
         if isinstance(body, web.Response):
             return body
+        if self.resetting:
+            return _item_job_response('not_available')
         try:
             job, created = await asyncio.to_thread(
                 self.item_jobs.submit, body, self.catalog_revision)
@@ -1731,6 +1737,73 @@ class LiveService:
         finally:
             self.restarting = False
 
+    async def reset_defaults(self, request):
+        """Put the built-in baseline back. One reset at a time, never beside an activation."""
+        refused = self._require_origin(request)
+        if refused is not None:
+            return refused
+        if self.resetting or self.restarting or self.activating is not None:
+            return web.json_response({'ok': False, 'error': 'reset_in_progress'}, status=409)
+        # Both flags are set before the first await. From here no new job is admitted, and
+        # an activation that races this reset ends as `activation_conflict`.
+        self.resetting, self.activating = True, 'reset-defaults'
+        applied = {}
+        try:
+            result = await self._reset_defaults(applied)
+        except Exception as error:
+            print(f'Reset to defaults failed: {_activation_message(error)}', flush=True)
+            # A backup that the helper published stays on disk, and its name is reported.
+            return web.json_response({'ok': False, 'error': 'reset_failed',
+                                      'backup': applied.get('backup')}, status=500)
+        finally:
+            self.resetting, self.activating = False, None
+        return web.json_response({'ok': True, 'result': result})
+
+    async def _reset_defaults(self, applied):
+        if self.active_bundle is None:
+            raise RuntimeError('this service owns no active bundle')
+        active_root = self.item_jobs_root / 'active'
+        marker = json.loads((active_root / object_catalog.SEED_MARKER).read_text())
+        baseline = marker['bundle_sha256']
+        jobs = self.history_root / 'jobs'
+        # An exact retry: the defaults are already in force, so nothing is applied twice.
+        if (_pointer_bundle(active_root) == baseline and self.active_bundle.name == baseline
+                and self.item_jobs is not None and not (jobs.is_dir() and any(jobs.iterdir()))
+                and self.state.get('status') in ('ready', 'running')):
+            return {'mode': 'noop', 'baseline_bundle_sha256': baseline, 'backup': None}
+
+        # The engine keeps its verified bundle until the reset is committed on disk, so a
+        # refused reset leaves the running session untouched.
+        await asyncio.to_thread(self._close_item_jobs)
+        try:
+            if self.item_jobs is not None or self.item_runner is not None:
+                raise RuntimeError('the job store did not close')
+            if _pointer_bundle(active_root) != baseline or (jobs.is_dir() and any(jobs.iterdir())):
+                if str(RESET_HELPER_ROOT) not in sys.path:
+                    sys.path.append(str(RESET_HELPER_ROOT))
+                # The helper takes history/writer.lock itself and refuses while it is held.
+                import reset_live_state
+                applied.update(await asyncio.to_thread(
+                    reset_live_state.reset_state, self.item_jobs_root, apply=True))
+            bundle = object_catalog.resolve_active_bundle(active_root)
+            if bundle.name != baseline:
+                raise RuntimeError('the active pointer does not name the baseline')
+            os.environ[object_catalog.CATALOG_ROOT_ENV] = str(bundle / 'catalog')
+            self.preset, self.active_bundle = bundle / object_catalog.BUNDLE_PRESET, bundle
+            try:
+                await self._swap_worker(self.state.get('session_id'))
+                if self.state.get('status') not in ('ready', 'running'):
+                    raise RuntimeError(self.state.get('error') or 'The engine failed to start.')
+            except Exception as error:
+                # The existing fatal path owns a start that did not come back.
+                await self._cleanup_restart_failure(f'Reset failed: {error}')
+                raise
+            self._refresh_active_identity()
+        finally:
+            if self.item_jobs is None and self.item_runner is None:
+                await asyncio.to_thread(self._open_item_jobs)
+        return {**applied, 'session_id': self.state.get('session_id')}
+
     async def health(self, request):
         status = self.state['status']
         error = self.state.get('error')
@@ -2014,6 +2087,7 @@ def main():
                     web.get('/timeline.mjs', timeline), web.get('/health', service.health),
                     web.get('/state', service.state_handler), web.get('/ws', service.websocket),
                     web.post('/restart', service.restart),
+                    web.post('/reset-defaults', service.reset_defaults),
                     web.post('/item-jobs', service.submit_item_job),
                     web.get('/item-jobs', service.list_item_jobs),
                     web.get('/item-jobs/{request_id}', service.get_item_job),
