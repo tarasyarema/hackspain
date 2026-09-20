@@ -1775,6 +1775,7 @@ class LiveService:
         # The engine keeps its verified bundle until the reset is committed on disk, so a
         # refused reset leaves the running session untouched.
         await asyncio.to_thread(self._close_item_jobs)
+        failure = None
         try:
             if self.item_jobs is not None or self.item_runner is not None:
                 raise RuntimeError('the job store did not close')
@@ -1799,9 +1800,19 @@ class LiveService:
                 await self._cleanup_restart_failure(f'Reset failed: {error}')
                 raise
             self._refresh_active_identity()
-        finally:
-            if self.item_jobs is None and self.item_runner is None:
+        except Exception as error:
+            failure = error
+        # The queue reopens on every path, and its own failure never hides the first one.
+        if self.item_jobs is None and self.item_runner is None:
+            try:
                 await asyncio.to_thread(self._open_item_jobs)
+            except Exception as error:
+                self.item_jobs_unhealthy = True
+                print(f'Item jobs: the queue did not reopen after the reset: '
+                      f'{_activation_message(error)}', flush=True)
+                failure = failure or error
+        if failure is not None:
+            raise failure
         return {**applied, 'session_id': self.state.get('session_id')}
 
     async def health(self, request):
