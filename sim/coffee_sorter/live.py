@@ -662,6 +662,12 @@ def worker(preset, states, acknowledgments, commands, stop, out):
         states.close()
 
 
+def _reset_refusal(code, status, **fields):
+    # `error` is the reset contract. `error_code` is the member the item panel reads.
+    return web.json_response({'ok': False, 'error': code, 'error_code': code, **fields},
+                             status=status)
+
+
 class LiveService:
     def __init__(self, preset, out, *, item_jobs_root=None, item_jobs_provider='cached',
                  catalog_root=None, provider_cache=None, provider_env=None,
@@ -1795,7 +1801,7 @@ class LiveService:
         if refused is not None:
             return refused
         if self.resetting or self.restarting or self.activating is not None:
-            return web.json_response({'ok': False, 'error': 'reset_in_progress'}, status=409)
+            return _reset_refusal('reset_in_progress', 409)
         # Both flags are set before the first await. From here no new job is admitted, and
         # an activation that races this reset ends as `activation_conflict`.
         self.resetting, self.activating = True, 'reset-defaults'
@@ -1805,8 +1811,7 @@ class LiveService:
         except Exception as error:
             print(f'Reset to defaults failed: {_activation_message(error)}', flush=True)
             # A backup that the helper published stays on disk, and its name is reported.
-            return web.json_response({'ok': False, 'error': 'reset_failed',
-                                      'backup': applied.get('backup')}, status=500)
+            return _reset_refusal('reset_failed', 500, backup=applied.get('backup'))
         finally:
             self.resetting, self.activating = False, None
         return web.json_response({'ok': True, 'result': result})

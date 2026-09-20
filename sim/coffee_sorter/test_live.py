@@ -2488,7 +2488,8 @@ class ResetDefaultsTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(403, (await self.reset(origin=None))[0])
         for name, value in (('resetting', True), ('restarting', True), ('activating', 'job-1')):
             with self.subTest(busy=name), patch.object(self.service, name, value), self.helper():
-                self.assertEqual((409, {'ok': False, 'error': 'reset_in_progress'}),
+                self.assertEqual((409, {'ok': False, 'error': 'reset_in_progress',
+                                        'error_code': 'reset_in_progress'}),
                                  await self.reset())
         self.assertEqual([], self.calls)
 
@@ -2499,7 +2500,8 @@ class ResetDefaultsTest(unittest.IsolatedAsyncioTestCase):
         with self.fake_swap(), self.helper(RuntimeError('the layout is unknown')):
             status, body = await self.reset()
 
-        self.assertEqual((500, {'ok': False, 'error': 'reset_failed', 'backup': None}),
+        self.assertEqual((500, {'ok': False, 'error': 'reset_failed', 'error_code': 'reset_failed',
+                                'backup': None}),
                          (status, body))
         self.assertEqual(generated, self.pointer())
         self.assertEqual(generated, self.service.active_bundle.name)
@@ -2527,7 +2529,8 @@ class ResetDefaultsTest(unittest.IsolatedAsyncioTestCase):
         with self.fake_swap(failing_swaps=(2,)), self.helper():
             status, body = await self.reset()
 
-        self.assertEqual((500, {'ok': False, 'error': 'reset_failed', 'backup': self.BACKUP}),
+        self.assertEqual((500, {'ok': False, 'error': 'reset_failed', 'error_code': 'reset_failed',
+                                'backup': self.BACKUP}),
                          (status, body))
         self.assertEqual(self.baseline, self.pointer())
         self.assertIsNotNone(self.service.item_jobs)
