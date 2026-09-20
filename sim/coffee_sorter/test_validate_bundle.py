@@ -880,7 +880,7 @@ class EnsureActiveBundleTest(BundleFixture, unittest.TestCase):
 
         patches = {"before the publication": ("publish_bundle", publish),
                    "before the pointer write": ("write_active_pointer", RuntimeError("crash")),
-                   "before the marker removal": ("read_active", RuntimeError("crash"))}
+                   "after the pointer write": ("read_active", RuntimeError("crash"))}
         name, effect = patches[step]
         with unittest.mock.patch.object(object_catalog, name, side_effect=effect):
             with self.assertRaises(RuntimeError):
@@ -969,7 +969,7 @@ class EnsureActiveBundleTest(BundleFixture, unittest.TestCase):
         marker = self.active / object_catalog.SEED_MARKER
         pointer = self.active / "active" / "catalog.json"
         expected = {"before the publication": (0, False), "before the pointer write": (1, False),
-                    "before the marker removal": (1, True)}
+                    "after the pointer write": (1, True)}
         for step, (bundle_count, pointed) in expected.items():
             with self.subTest(crash=step):
                 shutil.rmtree(self.active, ignore_errors=True)
@@ -986,8 +986,8 @@ class EnsureActiveBundleTest(BundleFixture, unittest.TestCase):
                 self.assertEqual(named, {"bundle_sha256": bundle.name})
                 self.assertEqual(self.published(), [bundle.name])
                 self.assertEqual(read_active(self.active)["active_bundle_sha256"], bundle.name)
-                # The pointer is the commit: a clean start removes the stale marker only.
-                self.assertFalse(marker.exists())
+                # The marker is permanent: it names the built-in baseline for a reset.
+                self.assertEqual(json.loads(marker.read_text()), named)
                 if pointed:
                     self.assertEqual(pointer.read_bytes(), committed)
 
