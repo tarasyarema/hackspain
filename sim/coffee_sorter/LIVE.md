@@ -99,12 +99,16 @@ then applies the reset under the released `history/writer.lock`: it archives the
 generated types and the needs-review jobs into the Wall of Fame, moves the jobs into
 `reset-backups/`, and points `active/` at the baseline. One new engine starts from that
 bundle and the queue reopens. Success answers `{ok: true, result}`. Any failure answers 500
-`reset_failed` with the kept `backup` name, and the queue reopens. An exact retry applies
+`reset_failed` with the kept `backup` name, and the queue reopens. A cancelled request
+never stops a reset that began. The route has no continuous-mode refusal, unlike
+`/restart`: a public deployment must put its operator sign-in before it. An exact retry applies
 nothing (`mode: noop`). A root seeded before the permanent marker has no marker, so the
 reset refuses there. While the store is closed, item routes other than submit can answer 500.
 
 `GET /catalog-assets/{catalog_revision}/{glb_sha256}.glb` serves only the pair that the
-active verified bundle lists (hash ETag, immutable caching). `GET /wall-of-fame/{entry_id}/{name}`
+active verified bundle lists. The handler sets a hash ETag and immutable caching, but the
+service-wide access middleware still overwrites `Cache-Control` with `no-store`, so a browser
+fetches the GLB again on every load. `GET /wall-of-fame/{entry_id}/{name}`
 serves `perspective.png`, `top.png`, or `object.glb` of one entry. Both read through a
 no-follow descriptor chain, and every refusal is a 404.
 

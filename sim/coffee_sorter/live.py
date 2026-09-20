@@ -838,8 +838,12 @@ class LiveService:
                 return
             self.item_runner = None
         if self.item_jobs is not None:
-            self.item_jobs.close()
-            self.item_jobs = None
+            try:
+                self.item_jobs.close()
+            finally:
+                # A store whose close raised is never used again. A lock it still holds
+                # makes the next open fail, and that failure is reported.
+                self.item_jobs = None
 
     def _item_jobs_packet(self):
         # A summary carries free text from a child, so it takes the same redaction.
@@ -1806,15 +1810,21 @@ class LiveService:
         # an activation that races this reset ends as `activation_conflict`.
         self.resetting, self.activating = True, 'reset-defaults'
         applied = {}
+        # The reset is its own task and owns both flags, so a cancelled request never
+        # strands a closed queue.
+        task = asyncio.create_task(self._reset_defaults(applied))
+        task.add_done_callback(self._reset_finished)
         try:
-            result = await self._reset_defaults(applied)
-        except Exception as error:
-            print(f'Reset to defaults failed: {_activation_message(error)}', flush=True)
+            result = await asyncio.shield(task)
+        except Exception:
             # A backup that the helper published stays on disk, and its name is reported.
             return _reset_refusal('reset_failed', 500, backup=applied.get('backup'))
-        finally:
-            self.resetting, self.activating = False, None
         return web.json_response({'ok': True, 'result': result})
+
+    def _reset_finished(self, task):
+        self.resetting, self.activating = False, None
+        if not task.cancelled() and task.exception() is not None:
+            print(f'Reset to defaults failed: {_activation_message(task.exception())}', flush=True)
 
     async def _reset_defaults(self, applied):
         if self.active_bundle is None:
@@ -1831,9 +1841,9 @@ class LiveService:
 
         # The engine keeps its verified bundle until the reset is committed on disk, so a
         # refused reset leaves the running session untouched.
-        await asyncio.to_thread(self._close_item_jobs)
         failure = None
         try:
+            await asyncio.to_thread(self._close_item_jobs)
             if self.item_jobs is not None or self.item_runner is not None:
                 raise RuntimeError('the job store did not close')
             if _pointer_bundle(active_root) != baseline or (jobs.is_dir() and any(jobs.iterdir())):
@@ -1841,8 +1851,16 @@ class LiveService:
                     sys.path.append(str(RESET_HELPER_ROOT))
                 # The helper takes history/writer.lock itself and refuses while it is held.
                 import reset_live_state
-                applied.update(await asyncio.to_thread(
-                    reset_live_state.reset_state, self.item_jobs_root, apply=True))
+                backups = self.item_jobs_root / 'reset-backups'
+                known = set(os.listdir(backups)) if backups.is_dir() else set()
+                try:
+                    applied.update(await asyncio.to_thread(
+                        reset_live_state.reset_state, self.item_jobs_root, apply=True))
+                except Exception:
+                    # The helper keeps its backup when its own rollback is incomplete.
+                    kept = set(os.listdir(backups)) - known if backups.is_dir() else set()
+                    applied['backup'] = max(kept, default=None)
+                    raise
             bundle = object_catalog.resolve_active_bundle(active_root)
             if bundle.name != baseline:
                 raise RuntimeError('the active pointer does not name the baseline')

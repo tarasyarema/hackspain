@@ -2430,11 +2430,15 @@ class ResetDefaultsTest(unittest.IsolatedAsyncioTestCase):
             fcntl.flock(handle, fcntl.LOCK_UN)
             return True
 
-    def helper(self, error=None):
+    def helper(self, error=None, wait=None, kept_backup=None):
         """The deployed helper contract: it needs the writer lock, then moves the pointer."""
         def reset_state(root, *, apply):
             self.calls.append({'root': Path(root), 'apply': apply,
                                'store': self.service.item_jobs, 'lock_free': self.lock_is_free()})
+            if wait is not None:
+                wait.wait(10)
+            if kept_backup is not None:
+                (Path(root) / 'reset-backups' / kept_backup).mkdir(parents=True)
             if error is not None:
                 raise error
             object_catalog.write_active_pointer(Path(root) / 'active', self.baseline)
@@ -2509,6 +2513,53 @@ class ResetDefaultsTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(1, len(self.swaps))
         self.assertIsNotNone(self.service.item_jobs)
         self.assertFalse(self.service.resetting)
+
+    async def test_a_helper_that_keeps_its_backup_has_that_name_reported(self):
+        await self.activated()
+
+        with self.fake_swap(), self.helper(RuntimeError('the rollback is incomplete'),
+                                           kept_backup=self.BACKUP):
+            status, body = await self.reset()
+
+        self.assertEqual((500, self.BACKUP), (status, body['backup']))
+
+    async def test_a_cancelled_request_still_finishes_the_reset_and_reopens_the_queue(self):
+        import threading
+        await self.activated()
+        gate = threading.Event()
+
+        with self.fake_swap(), self.helper(wait=gate):
+            request = asyncio.create_task(self.reset())
+            while not self.calls:
+                await asyncio.sleep(0.01)
+            request.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await request
+            # The reset still owns both flags, so nothing else starts beside it.
+            self.assertEqual((True, 'reset-defaults'),
+                             (self.service.resetting, self.service.activating))
+            gate.set()
+            while self.service.resetting:
+                await asyncio.sleep(0.01)
+
+        self.assertEqual(self.baseline, self.pointer())
+        self.assertIsNotNone(self.service.item_jobs)
+        self.assertFalse(self.lock_is_free())
+        self.assertIsNone(self.service.activating)
+
+    async def test_a_store_whose_close_raises_is_reported_and_never_left_half_open(self):
+        store = await self.activated()
+
+        with self.fake_swap(), self.helper(), \
+                patch.object(store, 'close', side_effect=OSError('close failed')):
+            status, body = await self.reset()
+
+        self.assertEqual((500, 'reset_failed'), (status, body['error']))
+        self.assertEqual([], self.calls)
+        # The real lock is still held by the broken store, so the reopen fails loudly.
+        self.assertIsNone(self.service.item_jobs)
+        self.assertTrue(self.service.item_jobs_unhealthy)
+        store.close()
 
     async def test_an_unconfirmed_runner_stop_aborts_before_the_helper(self):
         store = await self.activated()

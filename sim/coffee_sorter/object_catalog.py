@@ -963,6 +963,8 @@ def read_confined(root: Path, components: tuple[str, ...], limit: int) -> bytes:
             if not chunk:
                 return data
             data += chunk
+    except OSError:
+        pass
     finally:
         os.close(descriptor)
     raise CatalogError("the file is unavailable")
