@@ -13,6 +13,7 @@ import multiprocessing as mp
 import os
 import signal
 from pathlib import Path
+import threading
 from queue import Empty, Full
 import time
 import traceback
@@ -30,6 +31,9 @@ MAX_PENDING_COMMANDS = 16
 MAX_COMMANDS_PER_EPOCH = 256
 COMMAND_EPOCH_SECONDS = 60
 PUMP_STALE_SECONDS = 3.0
+# A worker whose parent died has no reader for its results. It leaves after this bound.
+ORPHAN_EXIT_SECONDS = 10.0
+ORPHAN_EXIT_CODE = 3
 DEFAULT_RUNTIME_LOCK = Path('/private/tmp/hackspain-coffee-runtime.lock')
 # Local development replays the recorded research cache. The service never writes there.
 DEFAULT_PROVIDER_CACHE = (HERE.parents[1]
@@ -193,6 +197,22 @@ class CommandLog:
 
 def worker(preset, states, acknowledgments, commands, stop, out):
     signal.signal(signal.SIGINT, signal.SIG_IGN)
+    # A hard parent exit leaves this process reparented to PID 1. Python gives a spawned
+    # child a parent sentinel, so one daemon watcher sets the SAME stop event that a
+    # graceful shutdown sets. A direct unit call gets None here and skips the watcher.
+    parent = mp.parent_process()
+    abandoned = threading.Event()
+    if parent is not None:
+        def watch_parent():
+            parent.join()
+            abandoned.set()
+            stop.set()
+            # Fail-safe only. Cancelling the abandoned feeders below normally ends this
+            # process at once. Nothing reads its results after the parent is gone.
+            time.sleep(ORPHAN_EXIT_SECONDS)
+            os._exit(ORPHAN_EXIT_CODE)
+
+        threading.Thread(target=watch_parent, name='parent-sentinel', daemon=True).start()
     for name in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'VECLIB_MAXIMUM_THREADS'):
         os.environ[name] = '1'
     engine = None
@@ -318,6 +338,13 @@ def worker(preset, states, acknowledgments, commands, stop, out):
     finally:
         if engine is not None:
             engine.close()
+        if abandoned.is_set():
+            # Parent-death path only. Nobody drains these queues now, and with spawn this
+            # process also holds a read end, so a full pipe never reports EPIPE. The
+            # blocked feeder thread would otherwise keep the process alive after stop.
+            for queue in (acknowledgments, states, commands):
+                with contextlib.suppress(Exception):
+                    queue.cancel_join_thread()
         # The HTTP process drains the final packet before joining this worker.
         acknowledgments.close()
         states.close()
