@@ -929,6 +929,34 @@ class LiveService:
             return _item_job_response(error.code)
         return web.Response(body=data, content_type=content_type)
 
+    def _read_catalog_asset(self, revision, digest):
+        """The GLB the ACTIVE bundle lists for this pair, or None. The caller names no path."""
+        # The active revision is a lowercase sha256, so equality also proves the format.
+        if self.active_bundle is None or revision != self.catalog_revision \
+                or not re.fullmatch(r'[0-9a-f]{64}', digest):
+            return None
+        try:
+            rows = [row for row in object_catalog.read_visual_registry(self.active_bundle)
+                    if row.get('glb_sha256') == digest]
+            if len(rows) != 1:
+                return None
+            data = object_catalog.read_confined(
+                self.active_bundle, (object_catalog.VISUAL_ASSET_DIR, f'{digest}.glb'),
+                object_catalog.MAX_GLB_BYTES)
+        except object_catalog.CatalogError:
+            return None
+        return data if hashlib.sha256(data).hexdigest() == digest else None
+
+    async def catalog_asset(self, request):
+        digest = request.match_info['glb_sha256']
+        data = await asyncio.to_thread(
+            self._read_catalog_asset, request.match_info['catalog_revision'], digest)
+        if data is None:
+            return web.json_response({'ok': False, 'error_code': 'asset_unavailable'}, status=404)
+        # The URL changes with the catalog or the bytes, so the body never changes.
+        return web.Response(body=data, content_type=object_catalog.GLB_MEDIA_TYPE, headers={
+            'ETag': f'"{digest}"', 'Cache-Control': 'public, max-age=31536000, immutable'})
+
     async def wall_of_fame(self, request):
         try:
             offset = int(request.query.get('offset', 0))
@@ -943,6 +971,19 @@ class LiveService:
         except object_catalog.CatalogError:
             return _item_job_response('invalid_request')
         return web.json_response({'ok': True, **page})
+
+    async def wall_of_fame_file(self, request):
+        name = request.match_info['name']
+        try:
+            data = await asyncio.to_thread(
+                object_catalog.read_wall_file,
+                getattr(self, 'history_root', None) or self.catalog_root,
+                request.match_info['entry_id'], name)
+        except object_catalog.CatalogError:
+            return web.json_response({'ok': False, 'error_code': 'asset_unavailable'}, status=404)
+        # The URL carries no hash, so the browser revalidates instead of caching for good.
+        return web.Response(body=data, content_type=object_catalog.WALL_FILES[name],
+                            headers={'Cache-Control': 'no-cache'})
 
     def _advance_command_epoch(self, now=None):
         if not self.continuous:
@@ -2117,7 +2158,10 @@ def main():
                     web.post('/item-jobs/{request_id}/resolve-replacement', service.resolve_item_replacement),
                     web.post('/item-jobs/{request_id}/confirm-cleanup', service.confirm_item_cleanup),
                     web.get('/item-jobs/{request_id}/previews/{name}', service.item_job_preview),
+                    web.get('/catalog-assets/{catalog_revision}/{glb_sha256}.glb',
+                            service.catalog_asset),
                     web.get('/wall-of-fame', service.wall_of_fame),
+                    web.get('/wall-of-fame/{entry_id}/{name}', service.wall_of_fame_file),
                     # The 3D view reuses the replay viewer's vendored three.js build (no network requests).
                     web.static('/vendor', HERE / 'web/vendor', follow_symlinks=False),
                     # Blender bean/machine GLBs plus the vendored GLTFLoader used by the 3D view.
