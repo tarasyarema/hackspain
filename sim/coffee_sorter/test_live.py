@@ -2405,7 +2405,9 @@ class ActiveBundleStartupTest(unittest.TestCase):
         bundle = value.active_bundle
         self.assertEqual(bundle.parent, self.root / 'active' / 'bundles')
         self.assertEqual(value.preset, bundle / 'preset.json')
-        self.assertFalse((self.root / 'active' / object_catalog.SEED_MARKER).exists())
+        # The seed marker is permanent: it names the built-in baseline for a reset.
+        marker = self.root / 'active' / object_catalog.SEED_MARKER
+        self.assertEqual(json.loads(marker.read_text()), {'bundle_sha256': bundle.name})
         catalog = object_catalog.read_active(self.root / 'active')
         self.assertEqual(catalog['active_bundle_sha256'], bundle.name)
         self.assertEqual(catalog['catalog_revision'], self.packaged['catalog_revision'])
@@ -2613,6 +2615,21 @@ class ActiveBundleStartupTest(unittest.TestCase):
         # An empty root still reads it, so the documented sentence stays true.
         with self.fresh_process_state(), self.assertRaises(OSError):
             live.bind_active_bundle(absent, self.work / 'empty-root')
+
+    def test_a_restart_keeps_the_seed_marker_that_names_the_baseline(self):
+        from test_validate_bundle import continuous_bundle_files
+
+        active = self.root / 'active'
+        digest = object_catalog.publish_bundle(active / 'bundles', continuous_bundle_files())
+        marker = active / object_catalog.SEED_MARKER
+        marker.write_text(json.dumps({'bundle_sha256': digest}))
+        object_catalog.write_active_pointer(active, digest)
+        before = marker.read_bytes()
+
+        for _ in range(2):
+            self.assertEqual(object_catalog.resolve_active_bundle(active),
+                             active / 'bundles' / digest)
+        self.assertEqual(marker.read_bytes(), before)
 
 
 def _string_values(document):

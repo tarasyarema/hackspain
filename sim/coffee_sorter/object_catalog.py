@@ -985,9 +985,10 @@ def ensure_active_bundle(active_root: Path, *, catalog_root: Path, model_path: P
     refuse a seed, and it runs on a scratch copy, so a refusal writes nothing to the root.
 
     A missing pointer alone never permits a seed. The seed is one transaction: a durable
-    marker names the expected bundle before anything is published, and it goes only after
-    the pointer is written. A start that finds that marker, no pointer, and at most that
-    one bundle completes the same seed. Every other root without a pointer is an error,
+    marker names the expected bundle before anything is published. The marker then stays
+    for good: it names the immutable built-in baseline that a reset to defaults restores.
+    A start that finds that marker, no pointer, and at most that one bundle completes the
+    same seed. Every other root without a pointer is an error,
     and so is a root whose history already records an activation.
     """
     active_root = Path(active_root)
@@ -1019,8 +1020,6 @@ def resolve_active_bundle(active_root: Path) -> Path:
     bundle_sha256 = read_active(active_root)["active_bundle_sha256"]
     if bundle_sha256 is None:
         raise CatalogError("the active pointer names no bundle")
-    # The pointer is the commit, so a marker that outlived it is a finished transaction.
-    (active_root / SEED_MARKER).unlink(missing_ok=True)
     return active_root / "bundles" / bundle_sha256
 
 
