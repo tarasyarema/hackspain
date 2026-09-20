@@ -1,0 +1,19 @@
+{
+  "source_revision": "c95a10a78a568a9580e54b1a18bc27bd9e64f737",
+  "image_sha256": "4bf6d623015cc92655d880a3563e8904a5467a082034fb8e3f14d19dccea120a",
+  "files": {
+    "sim/coffee_sorter/engine.py": "b1fe7bb710e92acefb7dd46f55c85ea0778ecbe0dd81658279f49d0c45fea0f1",
+    "sim/coffee_sorter/controller.py": "fac051ba53641f1c98dc78ce021ed8502864059adc391169af77474bc27c1c8f",
+    "sim/coffee_sorter/sim.py": "b66b440d156d6f1e0f2096b6ce740fc3e2dc4760a3205e84085b1ae8065f1114",
+    "sim/coffee_sorter/rolling_scores.py": "d3ad84f67d17b3a8861ec604e084661313a988dceddc0c131ac6e5149a9e9f4c",
+    "sim/coffee_sorter/vision.py": "b539b9a9d2fe04c81058526b2990aee89b1f88629578d8bc50ee41d17059c1c4",
+    "sim/coffee_sorter/classifier.py": "86078872d1a912182731ce80a53ab4a8bd7e8fb7cc4f10a51790df776ca643de",
+    "sim/coffee_sorter/profiles.py": "c186725ad3ca2c65327a60aec332eb6fce0fce5099ac2eaee65788e273f2b899",
+    "sim/coffee_sorter/scene.py": "90678e917131474289b95392a457be252afe42bc903b645fb35d5ea595974093",
+    "sim/coffee_sorter/object_catalog.py": "f984228e621854bc069c11b0c8948bafad6342d1fdd598de821586437655c2ea",
+    "sim/coffee_sorter/object_definitions.py": "16cd00b6a038b2696427b75cf7f54fb2ceba1359c12cebfb6cf4f53e68417a86",
+    "sim/coffee_sorter/assets.py": "c727b35d60c009e8d067a68521d296e475105067fa16bdc17dfba42d824dd247",
+    "sim/coffee_sorter/configs/continuous_demo.json": "5fc5033ea62ceb4f640b4e642990d014d6de09ce706c20501eecd6c30d5c428b",
+    "sim/coffee_sorter/models/live_green_arabica.joblib": "d793e25a3662585eda545cbe0dc84796d9fdd2e0787bdd89a10bfb441ed861ad"
+  }
+}
