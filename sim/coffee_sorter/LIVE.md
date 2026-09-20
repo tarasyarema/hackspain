@@ -85,10 +85,28 @@ that names `model_catalog_unrecorded`. Later starts use the bundle preset. `--pr
 matters again only for an empty root.
 
 The seed is one transaction. The marker `seed-transaction.json` in `active/` names the
-expected bundle before the publication and goes after the pointer write. A start that finds that marker,
+expected bundle before the publication. The marker is permanent: it holds exactly
+`{"bundle_sha256": ...}` and names the built-in baseline. A start that finds that marker,
 no pointer, and at most that one bundle completes the same seed. Every other root without
 a pointer is a startup error, and so is a root whose `history/activations.jsonl` exists.
 The service never reseeds over an existing pointer.
+
+`POST /reset-defaults` (Origin required, empty JSON body) puts that baseline back. One reset
+runs at a time, and never beside an activation or a restart: a second call answers 409
+`reset_in_progress`. The service stops admissions, closes the job store, and aborts when
+the store stays open. The deployment helper `deploy/hack-growth.dev/reset_live_state.py`
+then applies the reset under the released `history/writer.lock`: it archives the active
+generated types and the needs-review jobs into the Wall of Fame, moves the jobs into
+`reset-backups/`, and points `active/` at the baseline. One new engine starts from that
+bundle and the queue reopens. Success answers `{ok: true, result}`. Any failure answers 500
+`reset_failed` with the kept `backup` name, and the queue reopens. An exact retry applies
+nothing (`mode: noop`). A root seeded before the permanent marker has no marker, so the
+reset refuses there. While the store is closed, item routes other than submit can answer 500.
+
+`GET /catalog-assets/{catalog_revision}/{glb_sha256}.glb` serves only the pair that the
+active verified bundle lists (hash ETag, immutable caching). `GET /wall-of-fame/{entry_id}/{name}`
+serves `perspective.png`, `top.png`, or `object.glb` of one entry. Both read through a
+no-follow descriptor chain, and every refusal is a 404.
 
 `/health` adds `active_bundle_sha256` (null without a bundle) and
 `catalog_model_compatible` (the label order check of the preset loader, null when a
